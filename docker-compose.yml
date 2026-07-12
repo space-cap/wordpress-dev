@@ -1,0 +1,24 @@
+services:
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress-server
+    restart: unless-stopped
+
+    ports:
+      - "8088:80"
+
+    environment:
+      WORDPRESS_DB_HOST: host.docker.internal:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wpuser
+      WORDPRESS_DB_PASSWORD: wppass
+
+    volumes:
+      - ./wordpress:/var/www/html
+
+    networks:
+      - wordpress-network
+
+networks:
+  wordpress-network:
+    external: true
