@@ -21,4 +21,5 @@ services:
 
 networks:
   wordpress-network:
-    external: true
+    # external: true --> 다른 곳에 있는 네트워크를 사용할 때 사용
+    
