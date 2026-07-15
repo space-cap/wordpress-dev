@@ -1,0 +1,108 @@
+# ==========================================
+# WordPress 개발용 gitignore
+# ==========================================
+
+# --- 운영체제 및 IDE 관련 파일 ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+.sass-cache/
+.idea/
+.vscode/
+# VS Code SFTP 설정 파일 (접속 정보 보호)
+.vscode/sftp.json
+*.sublime-project
+*.sublime-workspace
+
+# --- Node 및 빌드 도구 관련 파일 ---
+node_modules/
+npm-debug.log
+yarn-error.log # yarn v1
+.eslintcache
+dist/
+build/
+
+# --- Composer 관련 파일 ---
+vendor/
+
+# --- 워드프레스 코어 설정 및 비밀 정보 ---
+# 로컬 자격 증명이나 로컬 오버라이드 파일은 절대 커밋하지 않습니다.
+wordpress/wp-config.php
+wordpress/wp-config-local.php
+.env
+docker-compose.override.yml
+
+# --- 워드프레스 콘텐츠, 캐시 및 업로드 파일 ---
+# 업로드/미디어 파일 제외 (저장소 용량을 불필요하게 차지함)
+wordpress/wp-content/uploads/
+
+# 캐시 및 업그레이드 파일 제외
+wordpress/wp-content/cache/
+wordpress/wp-content/upgrade/
+wordpress/wp-content/blogs.dir/
+
+# 백업 및 내보내기 파일 제외
+wordpress/wp-content/backups/
+wordpress/wp-content/database/
+*.sql
+*.sql.gz
+
+# 보안 및 시스템 로그 제외
+*.log
+wordpress/wp-content/debug.log
+
+# 로컬에서 생성되는 서버 설정 파일 제외
+wordpress/.htaccess
+wordpress/sitemap.xml
+wordpress/sitemap.xml.gz
+
+# --- 워드프레스 코어 파일 (기본적으로 무시) ---
+# 코어 파일은 Docker 이미지나 워드프레스 업데이트로 관리되므로,
+# 저장소를 깨끗하고 작게 유지하기 위해 무시합니다.
+wordpress/wp-admin/
+wordpress/wp-includes/
+wordpress/index.php
+wordpress/license.txt
+wordpress/readme.html
+wordpress/wp-activate.php
+wordpress/wp-blog-header.php
+wordpress/wp-comments-post.php
+wordpress/wp-config-docker.php
+wordpress/wp-config-sample.php
+wordpress/wp-cron.php
+wordpress/wp-links-opml.php
+wordpress/wp-load.php
+wordpress/wp-login.php
+wordpress/wp-mail.php
+wordpress/wp-settings.php
+wordpress/wp-signup.php
+wordpress/wp-trackback.php
+wordpress/xmlrpc.php
+
+# --- 표준 wp-content 기본 파일 ---
+wordpress/wp-content/index.php
+wordpress/wp-content/languages/
+wordpress/wp-content/plugins/index.php
+wordpress/wp-content/themes/index.php
+
+# --- 워드프레스 플러그인 및 테마 ---
+# 기본적으로 모든 플러그인과 테마를 무시합니다.
+# Composer로 관리하거나 공식 워드프레스 저장소에서 받은 경우에 유용합니다.
+wordpress/wp-content/plugins/*
+wordpress/wp-content/themes/*
+
+# 사용자 정의 플러그인, 테마, 그리고 must-use 플러그인은 명시적으로 포함합니다.
+# 참고: `hello.php`는 디렉터리가 아닌 파일이므로 직접 지정합니다.
+!wordpress/wp-content/plugins/akismet/
+!wordpress/wp-content/plugins/hello.php
+!wordpress/wp-content/plugins/channel-io/
+!wordpress/wp-content/themes/twentytwentythree/
+!wordpress/wp-content/themes/twentytwentyfive/
+!wordpress/wp-content/themes/iel-theme/
+!wordpress/wp-content/mu-plugins/
