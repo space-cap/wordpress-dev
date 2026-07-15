@@ -335,7 +335,7 @@ get_header();
             <div class="bg-gray-50 rounded-[32px] overflow-hidden hover:shadow-2xl hover:shadow-[#006eff]/5 transition-all duration-300 group border border-gray-100"
                 data-aos="fade-up" data-aos-delay="100">
                 <div class="h-[380px] lg:h-[450px] overflow-hidden relative">
-                    <img src="https://images.pexels.com/photos/5668772/pexels-photo-5668772.jpeg" alt="이영현 대표변호사"
+                    <img src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/images/attorney_lee.png'); ?>" alt="이영현 대표변호사"
                         loading="lazy"
                         class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
                     <div
@@ -357,7 +357,7 @@ get_header();
             <div class="bg-gray-50 rounded-[32px] overflow-hidden hover:shadow-2xl hover:shadow-[#006eff]/5 transition-all duration-300 group border border-gray-100"
                 data-aos="fade-up" data-aos-delay="200">
                 <div class="h-[380px] lg:h-[450px] overflow-hidden relative">
-                    <img src="https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg" alt="박민서 파트너변호사"
+                    <img src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/images/attorney_park.png'); ?>" alt="박민서 파트너변호사"
                         loading="lazy"
                         class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
                     <div
@@ -378,7 +378,7 @@ get_header();
             <div class="bg-gray-50 rounded-[32px] overflow-hidden hover:shadow-2xl hover:shadow-[#006eff]/5 transition-all duration-300 group border border-gray-100"
                 data-aos="fade-up" data-aos-delay="300">
                 <div class="h-[380px] lg:h-[450px] overflow-hidden relative">
-                    <img src="https://images.pexels.com/photos/6077368/pexels-photo-6077368.jpeg" alt="김우진 소송전담변호사"
+                    <img src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/images/attorney_kim.png'); ?>" alt="김우진 소송전담변호사"
                         loading="lazy"
                         class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
                     <div
