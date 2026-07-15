@@ -22,7 +22,7 @@
 <nav id="gnb" class="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 bg-transparent border-b border-white/10">
     <div class="max-w-[1520px] mx-auto px-5 lg:px-10 py-4 lg:py-6 flex items-center justify-between transition-all duration-300">
         <!-- 로고 -->
-        <a href="<?php echo esc_url(home_url('/')); ?>" class="flex items-center gap-2">
+        <a href="/" class="flex items-center gap-2">
             <!-- 텍스트 로고 형태 -->
             <span class="font-lora text-[22px] lg:text-[28px] font-bold tracking-tight text-white transition-all duration-300 gnb-logo">
                 법무법인 이엘
@@ -32,8 +32,8 @@
         <!-- 데스크톱 메뉴 -->
         <div class="hidden lg:block">
             <ul class="flex items-center gap-[30px] xl:gap-[40px]">
-                <li><a href="<?php echo esc_url(home_url('/about/')); ?>" class="gnb-menu-link text-[18px] font-medium text-white hover:opacity-75 transition-all duration-300">법인 소개</a></li>
-                <li><a href="<?php echo esc_url(home_url('/practice-areas/')); ?>" class="gnb-menu-link text-[18px] font-medium text-white hover:opacity-75 transition-all duration-300">법률 서비스</a></li>
+                <li><a href="/about/" class="gnb-menu-link text-[18px] font-medium text-white hover:opacity-75 transition-all duration-300">법인 소개</a></li>
+                <li><a href="/practice-areas/" class="gnb-menu-link text-[18px] font-medium text-white hover:opacity-75 transition-all duration-300">법률 서비스</a></li>
                 <li class="relative group">
                     <button class="gnb-menu-link text-[18px] font-medium text-white hover:opacity-75 transition-all duration-300 flex items-center gap-1.5 focus:outline-none">
                         이엘 피드
@@ -41,13 +41,13 @@
                     </button>
                     <div class="absolute left-1/2 -translate-x-1/2 top-full pt-4 hidden group-hover:block z-50">
                         <ul class="w-[140px] bg-white border border-black/5 rounded-xl py-3 px-2 shadow-lg flex flex-col gap-1.5 backdrop-blur-[15px]">
-                            <li><a href="<?php echo esc_url(home_url('/news/')); ?>" class="block px-4 py-2 text-[15px] font-medium text-gray-700 hover:text-iel-blue hover:bg-[#eef4ff] rounded-lg transition-colors text-center">뉴스</a></li>
-                            <li><a href="<?php echo esc_url(home_url('/insight/')); ?>" class="block px-4 py-2 text-[15px] font-medium text-gray-700 hover:text-iel-blue hover:bg-[#eef4ff] rounded-lg transition-colors text-center">인사이트</a></li>
+                            <li><a href="/news/" class="block px-4 py-2 text-[15px] font-medium text-gray-700 hover:text-iel-blue hover:bg-[#eef4ff] rounded-lg transition-colors text-center">뉴스</a></li>
+                            <li><a href="/insight/" class="block px-4 py-2 text-[15px] font-medium text-gray-700 hover:text-iel-blue hover:bg-[#eef4ff] rounded-lg transition-colors text-center">인사이트</a></li>
                         </ul>
                     </div>
                 </li>
-                <li><a href="<?php echo esc_url(home_url('/careers/')); ?>" class="gnb-menu-link text-[18px] font-medium text-white hover:opacity-75 transition-all duration-300">인재 채용</a></li>
-                <li><a href="<?php echo esc_url(home_url('/contact/')); ?>" class="gnb-menu-link text-[18px] font-medium text-white hover:opacity-75 transition-all duration-300 px-5 py-2.5 rounded-full border border-white/20 hover:border-white/50 hover:bg-white/10 transition-all duration-300">상담 신청</a></li>
+                <li><a href="/careers/" class="gnb-menu-link text-[18px] font-medium text-white hover:opacity-75 transition-all duration-300">인재 채용</a></li>
+                <li><a href="/contact/" class="gnb-menu-link text-[18px] font-medium text-white hover:opacity-75 transition-all duration-300 px-5 py-2.5 rounded-full border border-white/20 hover:border-white/50 hover:bg-white/10 transition-all duration-300">상담 신청</a></li>
                 
                 <!-- 테마 토글 버튼 (데스크톱) -->
                 <li>
@@ -87,20 +87,20 @@
             </div>
         </div>
         <ul class="flex flex-col gap-8 my-auto text-left py-10">
-            <li><a href="<?php echo esc_url(home_url('/about/')); ?>" class="text-[24px] font-semibold text-white tracking-wide">법인 소개</a></li>
-            <li><a href="<?php echo esc_url(home_url('/practice-areas/')); ?>" class="text-[24px] font-semibold text-white tracking-wide">법률 서비스</a></li>
+            <li><a href="/about/" class="text-[24px] font-semibold text-white tracking-wide">법인 소개</a></li>
+            <li><a href="/practice-areas/" class="text-[24px] font-semibold text-white tracking-wide">법률 서비스</a></li>
             <li>
                 <button id="mobile-feed-toggle" class="w-full flex items-center justify-between text-[24px] font-semibold text-white tracking-wide text-left focus:outline-none">
                     <span>이엘 피드</span>
                     <svg id="mobile-feed-arrow" class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 <ul id="mobile-feed-submenu" class="hidden flex-col gap-4 pl-4 mt-4">
-                    <li><a href="<?php echo esc_url(home_url('/news/')); ?>" class="text-[20px] font-medium text-white/70 hover:text-white transition-colors">뉴스</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/insight/')); ?>" class="text-[20px] font-medium text-white/70 hover:text-white transition-colors">인사이트</a></li>
+                    <li><a href="/news/" class="text-[20px] font-medium text-white/70 hover:text-white transition-colors">뉴스</a></li>
+                    <li><a href="/insight/" class="text-[20px] font-medium text-white/70 hover:text-white transition-colors">인사이트</a></li>
                 </ul>
             </li>
-            <li><a href="<?php echo esc_url(home_url('/careers/')); ?>" class="text-[24px] font-semibold text-white tracking-wide">인재 채용</a></li>
-            <li><a href="<?php echo esc_url(home_url('/contact/')); ?>" class="text-[24px] font-semibold text-white tracking-wide">상담 신청</a></li>
+            <li><a href="/careers/" class="text-[24px] font-semibold text-white tracking-wide">인재 채용</a></li>
+            <li><a href="/contact/" class="text-[24px] font-semibold text-white tracking-wide">상담 신청</a></li>
         </ul>
         <div class="text-[14px] text-gray-500 font-light shrink-0">
             © 2026 Legal Firm IEL. All Rights Reserved.
