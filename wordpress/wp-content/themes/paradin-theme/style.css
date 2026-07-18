@@ -1,0 +1,301 @@
+/*
+Theme Name: PARADIN Theme
+Theme URI: https://paradin.com/
+Description: 법무법인 파라딘 스타일의 모던하고 프리미엄한 커스텀 랜딩 테마입니다.
+Author: Antigravity & Lee
+Author URI: https://github.com/
+Version: 1.0.0
+Text Domain: paradin-theme
+*/
+
+/* ============================================
+   글로벌 다크 모드 테마 시스템
+   ============================================ */
+
+/* 1. 기본 배경 및 텍스트 전환 */
+html.dark body {
+    background-color: #0b0f19 !important;
+    color: #e2e8f0 !important;
+}
+
+html.dark .bg-white {
+    background-color: #0b0f19 !important;
+}
+
+html.dark .bg-[#fafafa],
+html.dark .bg-[#f8fafe],
+html.dark .bg-gray-50 {
+    background-color: #111827 !important;
+}
+
+/* 2. 텍스트 컬러 최적화 */
+html.dark .text-black,
+html.dark .text-[#1a1a1a] {
+    color: #ffffff !important;
+}
+
+html.dark .text-gray-900,
+html.dark .text-gray-800 {
+    color: #f3f4f6 !important;
+}
+
+html.dark .text-gray-700,
+html.dark .text-gray-600 {
+    color: #cbd5e1 !important;
+}
+
+html.dark .text-gray-500,
+html.dark .text-gray-400 {
+    color: #94a3b8 !important;
+}
+
+/* 3. 테두리 및 구분선 */
+html.dark .border-gray-100,
+html.dark .border-gray-200,
+html.dark .border-black\/5 {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* 4. 인풋 폼 스타일 조정 */
+html.dark input,
+html.dark textarea,
+html.dark select {
+    background-color: #1f2937 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+    color: #64748b !important;
+}
+
+/* 5. GNB 헤더 영역 예외 처리 (스크롤 후) */
+html.dark nav#gnb.bg-white\/95 {
+    background-color: rgba(11, 15, 25, 0.95) !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark nav#gnb.bg-white\/95 .gnb-logo,
+html.dark nav#gnb.bg-white\/95 .gnb-menu-link {
+    color: #ffffff !important;
+}
+
+html.dark nav#gnb.bg-white\/95 .gnb-menu-link.border-black\/20 {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+html.dark nav#gnb.bg-white\/95 .gnb-menu-link.border-black\/20:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark nav#gnb.bg-white\/95 .gnb-hamburger {
+    background-color: #ffffff !important;
+}
+
+/* GNB 드롭다운 서브메뉴 */
+html.dark nav#gnb .group .absolute ul {
+    background-color: #111827 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark nav#gnb .group .absolute ul a {
+    color: #cbd5e1 !important;
+}
+
+html.dark nav#gnb .group .absolute ul a:hover {
+    color: #006eff !important;
+    background-color: rgba(0, 110, 255, 0.1) !important;
+}
+
+/* 6. 모달 팝업 및 특정 카드 컴포넌트 */
+html.dark #success-modal-card,
+html.dark #success-modal .bg-white {
+    background-color: #111827 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html.dark #success-modal .text-gray-900 {
+    color: #ffffff !important;
+}
+
+/* 채용 페이지 아코디언 */
+html.dark .careers-accordion-item {
+    background-color: #111827 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* 7. 플로팅 메뉴 전화 연결 항목 다크모드 대응 */
+html.dark #float-tel {
+    background-color: #111827 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+/* ============================================
+   📢 포트폴리오 안내 배너 스타일
+   채용 담당자를 위해 사이트 최상단에 고정 표시
+   ============================================ */
+
+/* CSS 변수: 배너 높이. JS에서 동적으로 0px로 변경 가능 */
+:root {
+    --banner-height: 48px;
+}
+
+/* 배너 본체 — 화면 최상단 고정 */
+.portfolio-banner-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    /* GNB z-index(50)보다 높게 */
+    height: var(--banner-height);
+    background: linear-gradient(135deg, #0d1b3e 0%, #1a2f6e 50%, #0d1b3e 100%);
+    background-size: 200% 100%;
+    animation: bannerGradientShift 6s ease infinite;
+    border-bottom: 1px solid rgba(0, 110, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes bannerGradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* 배너 내부 컨텐츠 래퍼 */
+.portfolio-banner-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    max-width: 1520px;
+    width: 100%;
+    padding: 0 20px;
+    position: relative;
+}
+
+/* 💼 아이콘 */
+.portfolio-banner-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    display: none;
+    /* 모바일에서는 숨김 */
+}
+
+/* 배너 텍스트 */
+.portfolio-banner-text {
+    font-size: 13px;
+    color: #ff4d4d;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: center;
+    margin: 0;
+    flex: 1;
+}
+
+/* [개발자 노트 보기] 링크 */
+.portfolio-banner-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #60a5fa;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    margin-left: 6px;
+    padding: 2px 10px;
+    border: 1px solid rgba(96, 165, 250, 0.4);
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.portfolio-banner-link:hover {
+    color: #ffffff;
+    background: rgba(96, 165, 250, 0.2);
+    border-color: rgba(96, 165, 250, 0.7);
+    text-decoration: none;
+}
+
+/* 닫기(X) 버튼 */
+.portfolio-banner-close {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+.portfolio-banner-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+/* 데스크톱(1024px 이상) — 아이콘 노출, 텍스트 크기 업 */
+@media (min-width: 1024px) {
+    .portfolio-banner-icon {
+        display: inline;
+    }
+
+    .portfolio-banner-text {
+        font-size: 14px;
+    }
+}
+
+/* 모바일(767px 이하) — 배너 높이 늘리고 텍스트 압축 */
+@media (max-width: 767px) {
+    :root {
+        --banner-height: 56px;
+    }
+
+    .portfolio-banner-fixed {
+        height: var(--banner-height);
+    }
+
+    .portfolio-banner-text {
+        font-size: 11.5px;
+    }
+
+    .portfolio-banner-link {
+        font-size: 11.5px;
+        padding: 2px 8px;
+        margin-left: 4px;
+    }
+
+    .portfolio-banner-close {
+        right: 8px;
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* 다크모드에서도 배너는 항상 어두운 색상 유지 */
+html.dark .portfolio-banner-fixed {
+    background: linear-gradient(135deg, #0a1628 0%, #0f1f4d 50%, #0a1628 100%);
+    border-bottom-color: rgba(0, 110, 255, 0.2);
+}

@@ -105,4 +105,5 @@ wordpress/wp-content/themes/*
 !wordpress/wp-content/themes/twentytwentythree/
 !wordpress/wp-content/themes/twentytwentyfive/
 !wordpress/wp-content/themes/iel-theme/
+!wordpress/wp-content/themes/paradin-theme/
 !wordpress/wp-content/mu-plugins/
