@@ -22,15 +22,15 @@ html.dark .bg-white {
     background-color: #0b0f19 !important;
 }
 
-html.dark .bg-[#fafafa],
-html.dark .bg-[#f8fafe],
+html.dark .bg-\[\#fafafa\],
+html.dark .bg-\[\#f8fafe\],
 html.dark .bg-gray-50 {
     background-color: #111827 !important;
 }
 
 /* 2. 텍스트 컬러 최적화 */
 html.dark .text-black,
-html.dark .text-[#1a1a1a] {
+html.dark .text-\[\#1a1a1a\] {
     color: #ffffff !important;
 }
 
