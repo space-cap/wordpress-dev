@@ -34,7 +34,8 @@
                 <a href="/developer-note/" class="portfolio-banner-link">개발자 노트 보기 →</a>
             </p>
             <button id="banner-close-btn" class="portfolio-banner-close" aria-label="배너 닫기" title="배너 닫기">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
@@ -76,7 +77,8 @@
     </script>
 
     <nav id="gnb"
-        class="fixed left-0 right-0 z-50 w-full transition-all duration-300 bg-transparent border-b border-white/10" style="top: var(--banner-height, 48px);">
+        class="fixed left-0 right-0 z-50 w-full transition-all duration-300 bg-transparent border-b border-white/10"
+        style="top: var(--banner-height, 48px);">
         <div
             class="max-w-[1520px] mx-auto px-5 lg:px-10 py-4 lg:py-6 flex items-center justify-between transition-all duration-300">
             <!-- 로고 -->
@@ -131,7 +133,8 @@
                             class="gnb-menu-link text-[15px] font-semibold text-[#006eff] hover:opacity-80 transition-all duration-300 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006eff]/30 hover:border-[#006eff]/70 hover:bg-[#006eff]/10"
                             title="커스텀 테마 개발 포트폴리오 노트">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                             </svg>
                             Dev Note
                         </a>
@@ -231,7 +234,8 @@
                     <a href="/developer-note/" class="text-[24px] font-semibold tracking-wide flex items-center gap-3"
                         style="color: #006eff;">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                         </svg>
                         개발자 노트
                     </a>

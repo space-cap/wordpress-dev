@@ -4,16 +4,17 @@
  */
 
 // 페이지별 SEO 메타 description 자동 삽입
-function iel_seo_meta_tags() {
+function iel_seo_meta_tags()
+{
     global $post;
 
     $descriptions = array(
-        'about'          => '법무법인 이엘의 설립 철학, 전문 변호사 소개, 주요 연혁을 확인하세요. 검사 출신 변호사 팀이 의뢰인의 권익 보호를 위해 함께합니다.',
+        'about' => '법무법인 이엘의 설립 철학, 전문 변호사 소개, 주요 연혁을 확인하세요. 검사 출신 변호사 팀이 의뢰인의 권익 보호를 위해 함께합니다.',
         'practice-areas' => '성범죄·형사, 피해자 보호, 개인회생·파산, 민사·가사·상속 분쟁 등 법무법인 이엘의 전문 법률 서비스를 안내합니다.',
-        'news'           => '법무법인 이엘의 최신 소식, 언론 보도, 공지사항을 확인하세요.',
-        'insight'        => '법무법인 이엘 전문 변호인단이 직접 집필한 법률 인사이트와 판례 분석 칼럼을 만나보세요.',
-        'careers'        => '법무법인 이엘과 함께 성장할 인재를 기다립니다. 채용 공고와 복리후생을 확인하세요.',
-        'contact'        => '법무법인 이엘에 비밀 보장 1:1 법률 상담을 신청하세요. 모든 상담 내용은 변호사법에 따라 엄격히 보호됩니다.',
+        'news' => '법무법인 이엘의 최신 소식, 언론 보도, 공지사항을 확인하세요.',
+        'insight' => '법무법인 이엘 전문 변호인단이 직접 집필한 법률 인사이트와 판례 분석 칼럼을 만나보세요.',
+        'careers' => '법무법인 이엘과 함께 성장할 인재를 기다립니다. 채용 공고와 복리후생을 확인하세요.',
+        'contact' => '법무법인 이엘에 비밀 보장 1:1 법률 상담을 신청하세요. 모든 상담 내용은 변호사법에 따라 엄격히 보호됩니다.',
     );
 
     $slug = '';
@@ -37,7 +38,8 @@ function iel_seo_meta_tags() {
 add_action('wp_head', 'iel_seo_meta_tags', 2);
 
 
-function iel_theme_scripts() {
+function iel_theme_scripts()
+{
     // 1. Google Fonts & Pretendard Font
     wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+KR:wght@400;500;600;700&display=swap', array(), null);
     wp_enqueue_style('pretendard-font', 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css', array(), null);
@@ -56,7 +58,8 @@ function iel_theme_scripts() {
 add_action('wp_enqueue_scripts', 'iel_theme_scripts');
 
 // Tailwind config 주입 (head 부분에 추가)
-function iel_tailwind_config() {
+function iel_tailwind_config()
+{
     ?>
     <script>
         tailwind.config = {
@@ -83,14 +86,16 @@ function iel_tailwind_config() {
 add_action('wp_head', 'iel_tailwind_config', 100);
 
 // 테마 서포트 (제목 태그 자동 지원 등)
-function iel_theme_setup() {
+function iel_theme_setup()
+{
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
 }
 add_action('after_setup_theme', 'iel_theme_setup');
 
 // 필요한 고유 페이지 자동 생성 로직
-function iel_create_default_pages() {
+function iel_create_default_pages()
+{
     $pages = array(
         'about' => array(
             'title' => '법인 소개',
@@ -167,11 +172,12 @@ add_action('init', 'iel_create_default_pages');
  * 성능 최적화: 이미지 업로드 시 차세대 포맷 WebP 자동 변환 필터
  * ============================================
  */
-function iel_convert_upload_to_webp($uploads) {
+function iel_convert_upload_to_webp($uploads)
+{
     // 파일 타입 체크
     if ($uploads['type'] == 'image/jpeg' || $uploads['type'] == 'image/png') {
         $file_path = $uploads['file'];
-        
+
         // PHP GD 라이브러리 존재 여부 검사
         if (function_exists('imagecreatefromjpeg') && function_exists('imagewebp')) {
             $image = null;
@@ -185,16 +191,16 @@ function iel_convert_upload_to_webp($uploads) {
                     imagesavealpha($image, true);
                 }
             }
-            
+
             if ($image) {
                 // 확장자를 .webp로 변경한 새 파일 경로 생성
                 $new_file_path = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $file_path);
-                
+
                 // WebP 압축 및 저장 (최적 퀄리티 82%)
                 if (imagewebp($image, $new_file_path, 82)) {
                     // 원래 이미지(JPEG/PNG) 제거하여 디스크 용량 절약
                     unlink($file_path);
-                    
+
                     // 워드프레스 업로드 결과 변수 업데이트
                     $uploads['file'] = $new_file_path;
                     $uploads['url'] = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $uploads['url']);

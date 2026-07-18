@@ -64,6 +64,7 @@ html.dark select {
     border-color: rgba(255, 255, 255, 0.1) !important;
     color: #ffffff !important;
 }
+
 html.dark input::placeholder,
 html.dark textarea::placeholder {
     color: #64748b !important;
@@ -74,16 +75,20 @@ html.dark nav#gnb.bg-white\/95 {
     background-color: rgba(11, 15, 25, 0.95) !important;
     border-color: rgba(255, 255, 255, 0.05) !important;
 }
+
 html.dark nav#gnb.bg-white\/95 .gnb-logo,
 html.dark nav#gnb.bg-white\/95 .gnb-menu-link {
     color: #ffffff !important;
 }
+
 html.dark nav#gnb.bg-white\/95 .gnb-menu-link.border-black\/20 {
     border-color: rgba(255, 255, 255, 0.2) !important;
 }
+
 html.dark nav#gnb.bg-white\/95 .gnb-menu-link.border-black\/20:hover {
     background-color: rgba(255, 255, 255, 0.05) !important;
 }
+
 html.dark nav#gnb.bg-white\/95 .gnb-hamburger {
     background-color: #ffffff !important;
 }
@@ -93,9 +98,11 @@ html.dark nav#gnb .group .absolute ul {
     background-color: #111827 !important;
     border-color: rgba(255, 255, 255, 0.08) !important;
 }
+
 html.dark nav#gnb .group .absolute ul a {
     color: #cbd5e1 !important;
 }
+
 html.dark nav#gnb .group .absolute ul a:hover {
     color: #006eff !important;
     background-color: rgba(0, 110, 255, 0.1) !important;
@@ -107,6 +114,7 @@ html.dark #success-modal .bg-white {
     background-color: #111827 !important;
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
+
 html.dark #success-modal .text-gray-900 {
     color: #ffffff !important;
 }
@@ -140,7 +148,8 @@ html.dark #float-tel {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 100; /* GNB z-index(50)보다 높게 */
+    z-index: 100;
+    /* GNB z-index(50)보다 높게 */
     height: var(--banner-height);
     background: linear-gradient(135deg, #0d1b3e 0%, #1a2f6e 50%, #0d1b3e 100%);
     background-size: 200% 100%;
@@ -152,9 +161,17 @@ html.dark #float-tel {
 }
 
 @keyframes bannerGradientShift {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 /* 배너 내부 컨텐츠 래퍼 */
@@ -173,7 +190,8 @@ html.dark #float-tel {
 .portfolio-banner-icon {
     font-size: 16px;
     flex-shrink: 0;
-    display: none; /* 모바일에서는 숨김 */
+    display: none;
+    /* 모바일에서는 숨김 */
 }
 
 /* 배너 텍스트 */
@@ -243,6 +261,7 @@ html.dark #float-tel {
     .portfolio-banner-icon {
         display: inline;
     }
+
     .portfolio-banner-text {
         font-size: 14px;
     }
@@ -253,17 +272,21 @@ html.dark #float-tel {
     :root {
         --banner-height: 56px;
     }
+
     .portfolio-banner-fixed {
         height: var(--banner-height);
     }
+
     .portfolio-banner-text {
         font-size: 11.5px;
     }
+
     .portfolio-banner-link {
         font-size: 11.5px;
         padding: 2px 8px;
         margin-left: 4px;
     }
+
     .portfolio-banner-close {
         right: 8px;
         width: 24px;
@@ -276,5 +299,3 @@ html.dark .portfolio-banner-fixed {
     background: linear-gradient(135deg, #0a1628 0%, #0f1f4d 50%, #0a1628 100%);
     border-bottom-color: rgba(0, 110, 255, 0.2);
 }
-
-
