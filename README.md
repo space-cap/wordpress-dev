@@ -24,6 +24,11 @@
 * **상대 경로(도메인 독립) 아키텍처**: 워드프레스의 데이터베이스 주소(Site URL) 포트와 로컬 개발 서버 포트가 불일치할 시 로고나 이미지 엑스박스(Broken Link) 현상이 일어나는 문제를 해결하기 위해, 모든 내부 리소스를 도메인 비의존적인 상대 경로(`/wp-content/...`)로 매핑하여 어떠한 환경에서도 완벽히 렌더링됩니다.
 * **보안 예외 관리 (.gitignore)**: SFTP 접속 비밀번호가 노출되는 `.vscode/sftp.json` 및 로컬 서버 환경에 따른 `.htaccess`, `.env` 등을 완벽히 예외 처리하여 코드 저장소의 보안을 유지했습니다.
 
+### 5. 랜딩 페이지 및 간편 상담 DB 저장 시스템 (AJAX)
+* **standalone 독립형 템플릿 지원**: 사이트 공통 GNB 헤더/푸터가 노출되지 않도록 수동 마크업을 구축하되, `wp_head()`와 `wp_footer()` 훅은 안전하게 연동해 Tailwind/AOS 등 스타일 리소스를 차질 없이 로드하는 standalone 템플릿을 포함한 3종 랜딩 템플릿을 구현했습니다.
+* **비동기 간편 상담 DB 기록 (AJAX)**: 간편 상담 폼 제출 시 Fetch API를 활용해 워드프레스 AJAX 엔드포인트(`/wp-admin/admin-ajax.php`)로 전송, DB 마이그레이션이 필요 없는 CPT(Custom Post Type - `consultation`) 글 유형으로 DB에 안전하게 우회 저장합니다.
+* **확장성 스키마 및 전용 메타박스**: `_consult_type` 메타키에 구분자(예: `rehabilitation`, `sexual_crime`)를 함께 저장하도록 구성하여 향후 타 도메인 확장에 대비하고, 어드민 상세 화면에서 연락처, 부채규모, 지역 등을 일목요연하게 볼 수 있는 메타박스 전용 패널을 제공합니다.
+
 ---
 
 ## 🛠️ 기술 스택 (Tech Stack)
@@ -41,8 +46,12 @@
 paradin-theme/ (이엘 브랜드를 파라딘으로 변경한 새 포트폴리오 테마 폴더)
 ├── assets/
 │   └── images/          # 로컬 변호사 프로필 및 백그라운드 이미지 자산 (AI 생성 고화질 리소스)
+├── landing/             # 모듈화된 랜딩 페이지 템플릿 폴더 (1단계 하위 폴더 탐색 메커니즘 활용)
+│   ├── page-landing.php        # 일반형 랜딩 페이지 템플릿
+│   ├── page-landing-blank.php  # 독립형(Standalone) 순수 랜딩 페이지 템플릿
+│   └── page-rehabilitation.php # 회생·파산 센터용 특화 standalone 랜딩 페이지 템플릿 (계산기 및 AJAX DB 저장 탑재)
 ├── style.css            # 워드프레스 테마 메타 정보 선언 및 Vanilla CSS 커스텀 스타일시트
-├── functions.php        # WebP 자동 변환 필터 등 커스텀 훅 및 기능 선언
+├── functions.php        # WebP 자동 변환 필터, CPT 및 AJAX DB 저장 로직 등 선언
 ├── header.php           # GNB 및 다크모드 제어, 상대경로 최적화가 포함된 헤더
 ├── footer.php           # 1:1 상담 플로팅 메뉴 제어 스크립트와 저작권 영역이 포함된 푸터
 ├── front-page.php       # 메인 비디오 히어로, 탭 콘텐츠, Attorneys, Insights 그리드 템플릿
