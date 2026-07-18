@@ -1,82 +1,122 @@
-# 🐍 Python 업무 자동화 및 데이터 처리 작업계획서
+# 🐍 Python 업무 자동화 및 데이터 처리 작업계획서 (Docker & Webhook 기반 실시간 연동)
 
-본 계획서는 **법무법인 파라딘(PARADIN)** 포트폴리오의 실무 우대 역량을 극대화하기 위해, 워드프레스 상담 데이터와 내부 업무 시스템(**구글 스프레드시트**, **사내 슬랙 메신저**)을 연동하는 **Python 자동화 시스템** 설계 문서입니다.
+본 계획서는 **법무법인 파라딘(PARADIN)** 포트폴리오의 실무 및 DevOps 역량을 극대화하기 위해, 맥미니의 도커(Docker Compose) 환경 하에서 워드프레스와 파이썬 웹 서버(**FastAPI**)를 하나의 네트워크로 묶어 실시간 상담 데이터(**구글 스프레드시트**, **사내 슬랙**)를 자동 분산 처리하는 시스템 설계 문서입니다.
 
 ---
 
-## 1. 시스템 설계 및 아키텍처 (Architecture)
+## 1. 실시간 웹훅 아키텍처 (Real-time Webhook Architecture)
 
-의뢰인이 웹사이트에서 상담 신청서를 접수하면, 데이터가 워드프레스 DB를 거쳐 실시간 또는 배치 방식으로 구글 스프레드시트와 슬랙으로 동기화되는 흐름입니다.
+의뢰인이 웹사이트에서 상담 신청서를 접수하면, 워드프레스가 DB에 저장하는 즉시 **PHP `wp_insert_post` 훅**을 트리거하여 도커 내부 네트워크의 파이썬 FastAPI 서버로 실시간 POST 요청을 던집니다.
 
 ```mermaid
 sequenceDiagram
     actor 의뢰인
-    participant WP as 워드프레스 DB (CPT)
-    participant Py as Python 자동화 스크립트
+    participant WP as 워드프레스 컨테이너 (Docker)
+    participant Py as 파라딘 자동화 서버 (FastAPI Container)
     participant GS as 구글 스프레드시트 (API)
     participant Slack as 슬랙 채널 (Webhook)
 
-    의뢰인->>WP: 1. 상담 신청서 접수 (CPT 등록)
-    Note over Py: 2. 크론탭 또는 REST API 감지
-    Py->>WP: 3. 신규 상담 데이터 FETCH
-    WP-->>Py: 4. JSON 데이터 수집 완료
+    의뢰인->>WP: 1. 상담 신청 접수
+    WP->>WP: 2. DB 저장 및 php 훅 트리거 (wp_insert_post)
+    WP->>Py: 3. 실시간 Webhook POST 전송 (http://automation:8000/webhook)
+    Note over Py: 4. FastAPI 비동기 데이터 수신
     Py->>GS: 5. Google Sheets API 연동 (행 삽입)
-    Py->>Slack: 6. Slack Webhook 호출 (실시간 알림)
+    Py->>Slack: 6. Slack API 연동 (실시간 카드 알림)
 ```
 
 ---
 
 ## 2. 세부 기능 및 모듈 구성 (Module Details)
 
-### ① Google Sheets API 실시간 동기화
-* **개요:** 행정 직원이나 대표 변호사가 익숙한 엑셀(구글 시트) 환경에서 실시간 상담 예약 현황을 체크할 수 있도록 돕습니다.
-* **사용 라이브러리:** `gspread`, `google-auth`
-* **동작:**
-  1. 구글 클라우드 콘솔에서 서비스 계정(Service Account)을 생성하여 인증 키(JSON) 발급.
-  2. 스크립트 실행 시 인증을 거쳐 사전에 지정한 스프레드시트의 특정 탭(Sheet)을 로드.
-  3. 워드프레스의 신규 상담자 정보(이름, 연락처, 부채액, 지역, 상황 메시지, 일시)를 `append_row()`를 통해 가장 아래 행에 즉시 추가.
+### ① 워드프레스 웹훅 발송기 (WordPress PHP Webhook Sender)
+* **위치:** `functions.php` 하단
+* **역할:** 상담 CPT(`consultation`)가 생성되면, 해당 메타 데이터를 모아 파이썬 컨테이너로 JSON POST 요청을 보냅니다.
+* **통신 경로:** 도커 내부 DNS를 사용하므로, localhost IP 대신 컨테이너 서비스 이름(`http://automation:8000/webhook`)으로 직결 통신합니다.
 
-### ② Slack Webhook 실시간 긴급 알리미
-* **개요:** 상담 신청 접수 후 30분 이내에 긴급 전화를 돌릴 수 있도록, 담당 변호사단 슬랙 채널에 카드 포맷의 실시간 Push 알림을 전송합니다.
-* **사용 라이브러리:** `requests` (Slack Incoming Webhook URL 사용)
-* **동작:**
-  1. 슬랙 워크스페이스에 Incoming Webhooks 앱을 추가하여 고유 Webhook URL을 발급받습니다.
-  2. 상담 정보를 이쁘게 구조화하여 슬랙의 Block Kit 포맷으로 변환한 뒤 POST 요청으로 전송합니다.
+### ② 파이썬 FastAPI 비동기 수신서버 (Python FastAPI Web Server)
+* **위치:** `automation/main.py`
+* **역할:** 워드프레스의 웹훅 POST 요청을 비동기 수신(`async def create_webhook`)하여, 구글 시트 쓰기 작업 및 슬랙 발송 작업을 백그라운드 태스크로 넘겨 처리 속도와 안정성을 확보합니다.
+
+### ③ Google Sheets API 실시간 동기화
+* **사용 라이브러리:** `gspread`, `google-auth`
+* **동작:** 전달받은 상담 데이터를 구글 클라우드 콘솔의 서비스 계정 키를 통해 구글 드라이브 상의 실시간 스프레드시트에 안전하게 누적 기록합니다.
+
+### ④ Slack Webhook 실시간 카드 알리미
+* **사용 라이브러리:** `requests` 또는 `slack_sdk`
+* **동작:** 슬랙의 Incoming Webhook URL을 활용하여, 긴급 상담 정보를 카드 레이아웃으로 변환해 로펌 비서팀/변호사 채널에 즉시 푸시합니다.
 
 ---
 
-## 3. 코드베이스 구현 설계 (Code Structure)
+## 3. Docker Compose 통합 설계 (Multi-Container DevOps Design)
 
-저장소 루트에 `automation/` 폴더를 새로 개설하고 다음 파일들을 배치합니다.
+기존의 워드프레스 및 MySQL 컨테이너가 돌고 있는 `docker-compose.yml` 파일에 파이썬 서버 서비스를 아래와 같이 완벽히 통합합니다.
+
+### 📄 `docker-compose.yml` 서비스 정의 추가안
+```yaml
+version: '3.8'
+
+services:
+  # ... 기존 wordpress, db 서비스 영역 생략 ...
+
+  # 🆕 파이썬 실시간 자동화 컨테이너 추가
+  automation:
+    build:
+      context: ./automation
+      dockerfile: Dockerfile
+    container_name: paradin-automation
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./automation:/app
+      - /app/venv # 볼륨 마운트 시 가상환경 폴더 공유 예외 처리
+    env_file:
+      - ./automation/.env
+    networks:
+      - wp-network # 기존 wordpress 컨테이너와 동일한 네트워크 설정
+
+networks:
+  wp-network:
+    driver: bridge
+```
+
+---
+
+## 4. 코드베이스 디렉토리 구조 (Directory Structure)
 
 ```bash
 wordpress-dev/
+├── docker-compose.yml                # automation 서비스가 추가될 도커 컴포즈 파일
 ├── docs/
 │   └── python-automation-plan.md     # 본 작업 계획서
 └── automation/
-    ├── .env.example                  # 환경변수 템플릿 (인증 정보 은닉용)
-    ├── credentials.json.example      # 구글 서비스 계정 인증서 키 예시 파일
-    ├── requirements.txt              # 파이썬 의존성 패키지 목록
-    └── sync_consultation.py          # 자동화 및 동기화 메인 스크립트
+    ├── .env.example                  # 환경변수 설정 가이드템플릿
+    ├── credentials.json.example      # 구글 API 인증키 정보 예시
+    ├── requirements.txt              # FastAPI 및 gspread 등 패키지 목록
+    ├── Dockerfile                    # 파이썬 컨테이너 빌드 파일
+    └── main.py                       # FastAPI 및 자동화 핵심 비동기 앱 코드
 ```
 
-### 📄 .env 설정 제안 (`automation/.env.example`)
-```env
-# WordPress API 설정
-WP_SITE_URL=http://localhost:8088
-WP_API_USER=admin
-WP_API_PASSWORD=xxxx xxxx xxxx xxxx
+### 📄 파이썬 컨테이너 구성 정의 (`automation/Dockerfile`)
+```dockerfile
+FROM python:3.10-slim
 
-# Google Sheets 설정
-GOOGLE_SHEET_TITLE="법무법인 파라딘 상담 현황"
-GOOGLE_SHEET_TAB_NAME="실시간신청"
+WORKDIR /app
 
-# Slack Webhook 설정
-SLACK_WEBHOOK_URL=https://hooks.slack.com/services/XXXX/YYYY/ZZZZ
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 ```
 
 ### 📄 파이썬 의존성 패키지 (`automation/requirements.txt`)
 ```text
+fastapi==0.100.0
+uvicorn==0.22.0
 requests==2.31.0
 gspread==5.10.0
 google-auth==2.22.0
@@ -85,62 +125,25 @@ python-dotenv==1.0.0
 
 ---
 
-## 4. 배포 및 실행 가이드 (Deployment & Execution Guide)
+## 5. 실행 및 배포 프로세스 (Execution & Deployment)
 
-작성된 파이썬 스크립트를 실제로 실행하고 배포하는 방법은 크게 세 가지로 분류됩니다.
+도커 빌드 메커니즘을 사용하므로, 배포가 다음 명령어 한 줄로 마무리됩니다.
 
-### ① 로컬 개발 환경 수동 실행 (Local Manual Run)
-가장 빠르게 스크립트의 정상 동작을 검증하는 방법입니다.
-1. 파이썬 가상환경 생성 및 활성화:
+1. **도커 이미지 빌드 및 백그라운드 구동:**
    ```bash
-   python -m venv venv
-   # Windows
-   .\venv\Scripts\activate
-   # Mac/Linux
-   source venv/bin/activate
+   docker compose up -d --build
    ```
-2. 의존성 패키지 설치:
+2. **정상 구동 여부 확인 (로그 검증):**
    ```bash
-   pip install -r requirements.txt
+   docker compose logs -f automation
    ```
-3. 동기화 스크립트 실행:
-   ```bash
-   python sync_consultation.py
-   ```
-
-### ② 서버 환경 주기적 실행 (Cron Job & Task Scheduler)
-상담 데이터를 일정 시간 주기(예: 5분 또는 10분 간격)로 긁어와 동기화하기 위한 가장 정석적인 배포 방법입니다.
-
-* **Linux / WSL (cron 서비스 활용):**
-  크론탭 설정을 열고 5분마다 스크립트가 돌아가도록 설정합니다.
-  ```bash
-  crontab -e
-  # 매 5분마다 파이썬 스크립트 자동 실행 및 로그 기록 설정 예시
-  */5 * * * * /path/to/automation/venv/bin/python /path/to/automation/sync_consultation.py >> /path/to/automation/sync.log 2>&1
-  ```
-* **Windows (작업 스케줄러 활용):**
-  '작업 스케줄러' 앱에서 새 작업을 만들고, 5분 주기로 트리거하여 `venv\Scripts\python.exe`를 시작 프로그램으로 지정하고 인수로 `sync_consultation.py`의 절대경로를 설정합니다.
-
-### ③ 실무 클라우드 배포 시나리오 (Cloud Deployment)
-실무 로펌의 프로덕션 환경에서는 24시간 가동되는 서버 비용을 아끼기 위해 **서버리스(Serverless)**로 배포하는 것이 모범 사례(Best Practice)입니다.
-
-* **AWS Lambda + EventBridge (Cron):**
-  * 파이썬 스크립트를 AWS Lambda 함수로 업로드하고, **Amazon EventBridge**를 사용하여 5분 혹은 10분 간격으로 함수가 트리거되도록 설정합니다.
-  * 서버를 상시 구동할 필요가 없어 **월 비용이 0원**에 수렴하며 안정적인 운용이 가능합니다.
-* **AWS EC2 / 가벼운 VPS (Ubuntu):**
-  * 가상 서버 인스턴스를 대여하고, 그 안에서 가상환경(`venv`)을 활성화한 뒤 위 Linux Cron 설정을 적용해 가동합니다.
+   * uvicorn 서버가 `http://0.0.0.0:8000`에서 요청을 정상 대기하고 있는지 로그를 통해 파악합니다.
 
 ---
 
-## 5. 향후 작업 진행 단계 (Next Steps)
+## 6. 향후 작업 진행 단계 (Next Steps)
 
-1. **폴더 및 의존성 구성:** `automation/` 폴더를 생성하고 패키지 요구사항 파일을 작성합니다.
-2. **구현 코드 코딩:** 동적 REST API 조회 기능, 구글 시트 연동 모듈, 슬랙 알림 발송 로직이 유기적으로 합쳐진 `sync_consultation.py` 파이썬 코드를 작성합니다.
-3. **환경변수 견본 제공:** 키값들이 유출되지 않도록 `.env.example` 및 `.gitignore`를 업데이트하여 안전하게 프로젝트를 보안합니다.
-4. **README.md 연동 업데이트:** 본 파이썬 스크립트 실행 방법과 구조에 대한 설명을 `README.md` 마지막 부분에 추가합니다.
-
----
-
-> [!IMPORTANT]  
-> 이 작업계획은 채용 담당자에게 PHP 백엔드 웹 서비스뿐만 아니라 **파이썬 데이터 파이프라인 및 타사 서비스 API 통합 자동화 역량**까지 한 번에 보여줄 수 있는 좋은 마일스톤입니다. 작업 진행 승인을 해주시면 실제 작동 가능한 파이썬 코드를 한 땀 한 땀 장인 정신으로 빌드하겠습니다.
-
+1. **도커 컴포즈 업데이트:** `docker-compose.yml` 파일에 `automation` 구문을 안전하게 주입합니다.
+2. **파이썬 모듈 코드베이스 작성:** `automation/` 디렉토리를 생성하고 `Dockerfile`, `main.py`, `requirements.txt`, `.env.example`을 작성합니다.
+3. **워드프레스 웹훅 이식:** `functions.php`에 상담 글 저장 이벤트 시 `wp_remote_post()` 함수를 써서 `http://automation:8000/webhook`으로 JSON을 전송하는 PHP 후킹 코드를 작성합니다.
+4. **최종 통합 테스트 및 README.md 보완:** 도커 컴포즈 실행법을 README에 명시하여 마무리합니다.
