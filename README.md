@@ -85,6 +85,39 @@ docker compose up -d
 
 ---
 
+## 🐍 파이썬 실시간 업무 자동화 모듈 (Python Automation & API Integration)
+
+본 프로젝트는 로펌의 실무 행정 및 마케팅 효율성을 극대화하기 위해 **Python FastAPI** 기반의 실시간 데이터 파이프라인 자동화 서버를 내장하고 있습니다. 
+
+### 1. 주요 자동화 시나리오
+* **실시간 Google Sheets 동기화:** 워드프레스에 새로운 상담 신청글이 등록되면, API를 통해 구글 스프레드시트에 즉각적으로 상담 의뢰 기록을 누적 추가합니다.
+* **실시간 Slack 긴급 알리미:** 신속한 30분 이내 변호사 긴급 진단 통화를 개시할 수 있도록, 담당 부서의 슬랙 채널로 의뢰 내용 카드 알림을 POST 전송합니다.
+
+### 2. 도커 컴포즈 실행 방법
+도커 컴포즈 빌드 체계를 갖추고 있으므로, 아래 단 한 줄의 명령어로 워드프레스와 파이썬 웹 서버가 동일 네트워크 상에 동시에 백그라운드로 빌드 및 구동됩니다:
+```bash
+docker compose up -d --build
+```
+* **워드프레스 주소:** `http://localhost:8088`
+* **파이썬 자동화 서버 API 주소:** `http://localhost:8089` (API 스펙 문서: `http://localhost:8089/docs`)
+
+### 3. (로컬 단독 구동 시) `uv` 활용 가이드
+만약 도커를 띄우지 않고 로컬 호스트 PC에서 단독으로 파이썬 모듈을 구동할 때는 Astral의 초고속 파이썬 패키지 매니저인 `uv`를 사용합니다:
+```bash
+# automation 폴더로 이동하여 가상환경 생성
+cd automation
+uv venv
+
+# 가상환경 활성화 (Mac/Linux)
+source .venv/bin/activate
+
+# 의존성 패키지 설치 및 서버 구동
+uv pip install -r requirements.txt
+uvicorn main:app --port 8089 --reload
+```
+
+---
+
 ## 👤 개발자 소개 및 포트폴리오 활용 안내
 본 테마는 고해상도 그래픽과 인터랙티브 스크립트를 조화롭게 다루며 백엔드(PHP/WordPress) 데이터의 안전성까지 확보할 수 있는 풀스택 역량을 검증하기 위해 정교하게 작성된 코드베이스입니다. 
 

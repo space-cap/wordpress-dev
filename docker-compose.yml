@@ -19,7 +19,24 @@ services:
     networks:
       - wordpress-network
 
+  # 🆕 파이썬 실시간 자동화 컨테이너 추가
+  automation:
+    build:
+      context: ./automation
+      dockerfile: Dockerfile
+    container_name: paradin-automation
+    restart: always
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./automation:/app
+      - /app/venv # 볼륨 마운트 시 가상환경 폴더 공유 예외 처리
+    env_file:
+      - ./automation/.env
+    networks:
+      - wordpress-network
+
 networks:
   wordpress-network:
-    # external: true --> 다른 곳에 있는 네트워크를 사용할 때 사용
+    driver: bridge
     

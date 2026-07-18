@@ -557,6 +557,60 @@ function paradin_inject_faq_schema()
 add_action('wp_head', 'paradin_inject_faq_schema');
 
 
+/**
+ * ============================================
+ * 🆕 기술적 SEO & 업무 자동화: 신규 상담 신청 시 Python Webhook 전송
+ * ============================================
+ */
+function paradin_send_consultation_webhook($post_id, $post, $update)
+{
+    // 업데이트 작업이거나 자동 저장일 때는 패스 (신규 등록만 처리)
+    if ($update || wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
+        return;
+    }
+
+    // CPT 타입이 consultation(상담 신청)일 때만 작동
+    if ($post->post_type !== 'consultation') {
+        return;
+    }
+
+    // 메타데이터 취득
+    $phone = get_post_meta($post_id, '_consult_phone', true);
+    $debt = get_post_meta($post_id, '_consult_debt', true);
+    $region = get_post_meta($post_id, '_consult_region', true);
+    $type = get_post_meta($post_id, '_consult_type', true);
+    $message = $post->post_content;
+
+    // 파이썬 웹훅 수신 규격에 맞는 데이터 맵 구성
+    $body = array(
+        'name'    => $post->post_title,
+        'phone'   => $phone ? $phone : '미입력',
+        'debt'    => $debt ? $debt : '미입력',
+        'region'  => $region ? $region : '미입력',
+        'message' => $message ? $message : '상황 설명이 없습니다.',
+        'type'    => $type ? $type : 'rehabilitation',
+        'date'    => get_the_date('Y-m-d H:i:s', $post_id)
+    );
+
+    // 파이썬 자동화 서버 웹훅 수신 URL (도커 컴포즈 서비스명 기준)
+    $webhook_url = 'http://automation:8089/webhook';
+
+    // 비동기 형태로 신속하게 발송하기 위해 타임아웃을 짧게 지정
+    $args = array(
+        'body'        => json_encode($body),
+        'headers'     => array('Content-Type' => 'application/json; charset=utf-8'),
+        'timeout'     => 3,
+        'blocking'    => false, // 결과 응답을 기다리지 않고 백그라운드 발송하여 웹페이지 로딩 차단 방지
+        'data_format' => 'body'
+    );
+
+    wp_remote_post($webhook_url, $args);
+}
+// save_post 훅에 등록 (우선순위 20으로 메타데이터가 먼저 저장된 뒤 실행되도록 함)
+add_action('save_post_consultation', 'paradin_send_consultation_webhook', 20, 3);
+
+
+
 
 
 
