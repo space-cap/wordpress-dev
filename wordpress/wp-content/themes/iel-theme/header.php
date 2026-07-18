@@ -5,10 +5,10 @@
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-        // 로컬스토리지 혹은 시스템 설정에 따른 다크모드 즉각 초기화 (깜빡임 방지)
+        // 기본값은 라이트 테마.
+        // 사용자가 토글 버튼을 눌러 명시적으로 선택한 경우에만 다크모드 적용 (깜빡임 방지 IIFE)
         (function () {
-            var theme = localStorage.getItem('theme');
-            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            if (localStorage.getItem('theme') === 'dark') {
                 document.documentElement.classList.add('dark');
             } else {
                 document.documentElement.classList.remove('dark');
