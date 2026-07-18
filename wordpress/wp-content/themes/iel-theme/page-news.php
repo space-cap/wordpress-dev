@@ -36,13 +36,12 @@ get_header();
         );
         $query = new WP_Query($args);
 
-        // 실제 등록된 글이 존재할 경우
-        if ($query->have_posts() || have_posts()) :
-            $display_query = $query->have_posts() ? $query : $wp_query;
+        // 'news' 카테고리의 실제 포스트가 존재할 경우에만 출력
+        if ($query->have_posts()) :
             ?>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
                 <?php
-                while ($display_query->have_posts()) : $display_query->the_post();
+                while ($query->have_posts()) : $query->the_post();
                     ?>
                     <article class="group bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300" data-aos="fade-up">
                         <a href="<?php the_permalink(); ?>" class="block h-[240px] overflow-hidden relative bg-gray-100">
