@@ -101,10 +101,14 @@ wordpress-dev/
 ```dockerfile
 FROM python:3.10-slim
 
+# 🆕 Astral의 초고속 패키지 매니저 uv 바이너리 추가
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
 WORKDIR /app
 
+# uv를 사용하여 시스템 패키지 형태로 비동기 초고속 빌드 진행
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN uv pip install --no-cache --system -r requirements.txt
 
 COPY . .
 
@@ -133,11 +137,34 @@ python-dotenv==1.0.0
    ```bash
    docker compose up -d --build
    ```
+   * *참고:* 빌드 시 `uv` 패키지 캐싱이 작동하여 이미지 빌드 속도가 기존 `pip` 대비 최대 10배 이상 단축됩니다.
 2. **정상 구동 여부 확인 (로그 검증):**
    ```bash
    docker compose logs -f automation
    ```
    * uvicorn 서버가 `http://0.0.0.0:8000`에서 요청을 정상 대기하고 있는지 로그를 통해 파악합니다.
+
+### 💡 (옵션) 로컬 개발 환경에서 uv 수동 실행 가이드
+만약 도커 컨테이너를 쓰지 않고 로컬 맥미니 환경에서 직접 파이썬 서버를 실행할 때는 다음 `uv` 명령어를 활용합니다.
+1. `uv` 설치 (설치되어 있지 않은 경우):
+   ```bash
+   # MacOS / Linux
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+2. 가상환경 생성 (`venv` 대신 `uv` 가상환경 개설):
+   ```bash
+   uv venv
+   # 가상환경 활성화 (MacOS)
+   source .venv/bin/activate
+   ```
+3. 초고속 패키지 인스톨:
+   ```bash
+   uv pip install -r requirements.txt
+   ```
+4. FastAPI 서버 구동:
+   ```bash
+   uvicorn main:app --reload
+   ```
 
 ---
 
@@ -146,4 +173,5 @@ python-dotenv==1.0.0
 1. **도커 컴포즈 업데이트:** `docker-compose.yml` 파일에 `automation` 구문을 안전하게 주입합니다.
 2. **파이썬 모듈 코드베이스 작성:** `automation/` 디렉토리를 생성하고 `Dockerfile`, `main.py`, `requirements.txt`, `.env.example`을 작성합니다.
 3. **워드프레스 웹훅 이식:** `functions.php`에 상담 글 저장 이벤트 시 `wp_remote_post()` 함수를 써서 `http://automation:8000/webhook`으로 JSON을 전송하는 PHP 후킹 코드를 작성합니다.
-4. **최종 통합 테스트 및 README.md 보완:** 도커 컴포즈 실행법을 README에 명시하여 마무리합니다.
+4. **최종 통합 테스트 및 README.md 보완:** 도커 컴포즈 실행법 및 `uv` 사용 매뉴얼을 README에 명시하여 마무리합니다.
+
