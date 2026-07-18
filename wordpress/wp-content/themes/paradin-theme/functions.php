@@ -432,6 +432,90 @@ add_action('wp_ajax_nopriv_save_consultation', 'paradin_ajax_save_consultation')
 add_action('wp_ajax_save_consultation', 'paradin_ajax_save_consultation');
 
 
+/**
+ * ============================================
+ * 🆕 기술적 SEO: JSON-LD 구조화 데이터 적용
+ * ============================================
+ */
+
+// 1. 법인 기본 정보 (LegalService) 스키마 주입
+function paradin_inject_legal_service_schema()
+{
+    if (is_front_page() || is_page('about')) {
+        $schema = array(
+            "@context" => "https://schema.org",
+            "@type" => "LegalService",
+            "@id" => home_url('/#organization'),
+            "name" => "법무법인 파라딘",
+            "url" => home_url('/'),
+            "logo" => get_template_directory_uri() . "/assets/images/logo.png",
+            "image" => get_template_directory_uri() . "/assets/images/attorney_lee.png",
+            "telephone" => "02-872-1307",
+            "priceRange" => "$$$",
+            "address" => array(
+                "@type" => "PostalAddress",
+                "streetAddress" => "서초대로 123길 45 법률타워 5층",
+                "addressLocality" => "Seoul",
+                "postalCode" => "06596",
+                "addressCountry" => "KR"
+            ),
+            "geo" => array(
+                "@type" => "GeoCoordinates",
+                "latitude" => 37.4979,
+                "longitude" => 127.0276
+            ),
+            "sameAs" => array(
+                "https://www.youtube.com/c/paradin-law",
+                "https://blog.naver.com/paradin-law"
+            )
+        );
+        echo "\n" . '<!-- JSON-LD LegalService Schema 주입 -->' . "\n";
+        echo '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . '</script>' . "\n";
+    }
+}
+add_action('wp_head', 'paradin_inject_legal_service_schema');
+
+// 2. 인재 채용 정보 (JobPosting) 스키마 주입
+function paradin_inject_job_posting_schema()
+{
+    if (is_page('careers')) {
+        $schema = array(
+            "@context" => "https://schema.org",
+            "@type" => "JobPosting",
+            "title" => "법무법인 파라딘 웹 프로그래머 채용",
+            "description" => "<p>법무법인 파라딘에서 워드프레스 테마 커스터마이징 및 사내 시스템 자동화를 담당할 유능한 개발자를 모집합니다.</p>",
+            "identifier" => array(
+                "@type" => "PropertyValue",
+                "name" => "PARADIN",
+                "value" => "PARADIN-DEV-2026"
+            ),
+            "datePosted" => "2026-07-15",
+            "validThrough" => "2026-08-31T23:59:59+09:00",
+            "employmentType" => "FULL_TIME",
+            "hiringOrganization" => array(
+                "@type" => "Organization",
+                "name" => "법무법인 파라딘",
+                "sameAs" => home_url('/')
+            ),
+            "jobLocation" => array(
+                "@type" => "Place",
+                "address" => array(
+                    "@type" => "PostalAddress",
+                    "streetAddress" => "서초대로 123길 45 법률타워 5층",
+                    "addressLocality" => "Seoul",
+                    "postalCode" => "06596",
+                    "addressCountry" => "KR"
+                )
+            )
+        );
+        echo "\n" . '<!-- JSON-LD JobPosting Schema 주입 -->' . "\n";
+        echo '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . '</script>' . "\n";
+    }
+}
+add_action('wp_head', 'paradin_inject_job_posting_schema');
+
+
+
 
 
 
