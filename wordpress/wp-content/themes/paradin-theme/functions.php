@@ -230,6 +230,199 @@ function paradin_single_template_for_news($template)
 }
 add_filter('single_template', 'paradin_single_template_for_news');
 
+/**
+ * ============================================
+ * 🆕 1:1 간편 상담 신청 (Consultation) Custom Post Type 등록
+ * ============================================
+ */
+function paradin_register_consultation_cpt() {
+    $labels = array(
+        'name'               => '상담 신청 목록',
+        'singular_name'      => '상담 신청',
+        'menu_name'          => '상담 신청 목록',
+        'name_admin_bar'     => '상담 신청',
+        'add_new'            => '새 상담 추가',
+        'add_new_item'       => '새 상담 신청 등록',
+        'new_item'           => '새 상담',
+        'edit_item'          => '상담 정보 보기',
+        'view_item'          => '상담 보기',
+        'all_items'          => '모든 상담 신청',
+        'search_items'       => '상담 검색',
+        'not_found'          => '상담 신청이 없습니다.',
+        'not_found_in_trash' => '휴지통에 상담 신청이 없습니다.'
+    );
+
+    $args = array(
+        'labels'             => $labels,
+        'public'             => false, // 프론트엔드에 개별 포스트 페이지가 노출되지 않도록 함
+        'publicly_queryable' => false,
+        'show_ui'            => true,  // 어드민 대시보드에 노출
+        'show_in_menu'       => true,
+        'query_var'          => true,
+        'rewrite'            => array( 'slug' => 'consultation' ),
+        'capability_type'    => 'post',
+        'has_archive'        => false,
+        'hierarchical'       => false,
+        'menu_position'      => 26,
+        'menu_icon'          => 'dashicons-feedback', // 피드백 말풍선 아이콘
+        'supports'           => array( 'title' )      // 제목만 지원 (이름으로 제목 설정)
+    );
+
+    register_post_type( 'consultation', $args );
+}
+add_action( 'init', 'paradin_register_consultation_cpt' );
+
+/**
+ * 상담 상세 정보를 표시할 읽기 전용 메타박스 생성
+ */
+function paradin_add_consultation_metaboxes() {
+    add_meta_box(
+        'consultation_details',
+        '상담 신청 상세 정보',
+        'paradin_consultation_details_callback',
+        'consultation',
+        'normal',
+        'high'
+    );
+}
+add_action( 'add_meta_boxes', 'paradin_add_consultation_metaboxes' );
+
+function paradin_consultation_details_callback( $post ) {
+    // 저장된 메타 값 가져오기
+    $phone = get_post_meta( $post->ID, '_consult_phone', true );
+    $debt = get_post_meta( $post->ID, '_consult_debt', true );
+    $region = get_post_meta( $post->ID, '_consult_region', true );
+    $message = get_post_meta( $post->ID, '_consult_message', true );
+    $type = get_post_meta( $post->ID, '_consult_type', true );
+
+    // 상담 분야 한글 매핑
+    $type_kr = '미분류 일반상담';
+    if ( $type === 'rehabilitation' ) {
+        $type_kr = '개인회생·파산';
+    } elseif ( $type === 'sexual_crime' ) {
+        $type_kr = '성범죄 · 강력 형사';
+    }
+
+    ?>
+    <table class="form-table" style="width: 100%;">
+        <tr>
+            <th style="width: 20%; text-align: left; font-weight: bold;">상담 구분</th>
+            <td><span style="background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 12px;"><?php echo esc_html( $type_kr ); ?></span></td>
+        </tr>
+        <tr>
+            <th style="font-weight: bold;">연락처</th>
+            <td><strong style="font-size: 15px;"><?php echo esc_html( $phone ? $phone : '미입력' ); ?></strong></td>
+        </tr>
+        <?php if ( $type === 'rehabilitation' ) : ?>
+        <tr>
+            <th style="font-weight: bold;">총 부채 규모</th>
+            <td><?php echo esc_html( $debt ? $debt : '미입력' ); ?></td>
+        </tr>
+        <?php endif; ?>
+        <tr>
+            <th style="font-weight: bold;">거주 지역</th>
+            <td><?php echo esc_html( $region ? $region : '미입력' ); ?></td>
+        </tr>
+        <tr>
+            <th style="font-weight: bold;">상황 설명 / 남긴 메시지</th>
+            <td>
+                <textarea readonly style="width: 100%; height: 120px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; font-family: inherit; font-size: 13px; line-height: 1.6; resize: none;"><?php echo esc_textarea( $message ); ?></textarea>
+            </td>
+        </tr>
+    </table>
+    <?php
+}
+
+/**
+ * 어드민 테이블 칼럼 커스터마이징 (목록에서 연락처와 분야를 바로 볼 수 있게 함)
+ */
+function paradin_set_consultation_columns($columns) {
+    $new_columns = array(
+        'cb' => '<input type="checkbox" />',
+        'title' => '신청자 성함',
+        'consult_type' => '상담 분야',
+        'phone' => '연락처',
+        'region' => '거주 지역',
+        'date' => '신청 일시'
+    );
+    return $new_columns;
+}
+add_filter('manage_consultation_posts_columns', 'paradin_set_consultation_columns');
+
+function paradin_custom_consultation_column( $column, $post_id ) {
+    switch ( $column ) {
+        case 'consult_type' :
+            $type = get_post_meta( $post_id, '_consult_type', true );
+            if ( $type === 'rehabilitation' ) {
+                echo '<span style="color: #2563eb; font-weight: bold;">회생·파산</span>';
+            } elseif ( $type === 'sexual_crime' ) {
+                echo '<span style="color: #dc2626; font-weight: bold;">성범죄</span>';
+            } else {
+                echo '일반상담';
+            }
+            break;
+
+        case 'phone' :
+            echo esc_html( get_post_meta( $post_id, '_consult_phone', true ) );
+            break;
+
+        case 'region' :
+            echo esc_html( get_post_meta( $post_id, '_consult_region', true ) );
+            break;
+    }
+}
+add_action( 'manage_consultation_posts_custom_column' , 'paradin_custom_consultation_column', 10, 2 );
+
+/**
+ * ============================================
+ * 🆕 AJAX 상담 저장 엔드포인트 핸들러
+ * ============================================
+ */
+function paradin_ajax_save_consultation() {
+    // 데이터 취득 및 필터링
+    $name    = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
+    $phone   = isset( $_POST['phone'] ) ? sanitize_text_field( $_POST['phone'] ) : '';
+    $debt    = isset( $_POST['debt'] ) ? sanitize_text_field( $_POST['debt'] ) : '';
+    $region  = isset( $_POST['region'] ) ? sanitize_text_field( $_POST['region'] ) : '';
+    $message = isset( $_POST['message'] ) ? sanitize_textarea_field( $_POST['message'] ) : '';
+    $type    = isset( $_POST['type'] ) ? sanitize_text_field( $_POST['type'] ) : 'rehabilitation'; // 기본값 회생파산
+
+    if ( empty( $name ) || empty( $phone ) ) {
+        wp_send_json_error( array( 'message' => '성함과 연락처는 필수 입력 항목입니다.' ) );
+    }
+
+    // 새 포스트 삽입
+    $post_data = array(
+        'post_title'   => $name,
+        'post_status'  => 'publish',
+        'post_type'    => 'consultation',
+        'post_content' => $message,
+    );
+
+    $post_id = wp_insert_post( $post_data );
+
+    if ( is_wp_error( $post_id ) ) {
+        wp_send_json_error( array( 'message' => 'DB 저장 중 오류가 발생했습니다.' ) );
+    }
+
+    // 메타데이터 정보 기록
+    update_post_meta( $post_id, '_consult_phone', $phone );
+    update_post_meta( $post_id, '_consult_debt', $debt );
+    update_post_meta( $post_id, '_consult_region', $region );
+    update_post_meta( $post_id, '_consult_message', $message );
+    update_post_meta( $post_id, '_consult_type', $type );
+
+    // 성공 응답 반환
+    wp_send_json_success( array( 
+        'message' => '성공적으로 접수되었습니다.',
+        'post_id' => $post_id 
+    ) );
+}
+// 비로그인 사용자 및 로그인 사용자 대응 훅 연결
+add_action( 'wp_ajax_nopriv_save_consultation', 'paradin_ajax_save_consultation' );
+add_action( 'wp_ajax_save_consultation', 'paradin_ajax_save_consultation' );
+
+
 
 
 

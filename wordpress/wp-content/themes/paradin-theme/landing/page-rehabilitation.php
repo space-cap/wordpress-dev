@@ -803,24 +803,66 @@ add_action('wp_head', 'inject_legal_service_schema');</pre>
             document.getElementById('res-writeoff').innerText = Math.round(writeOffAmount).toLocaleString() + '만 원';
         }
 
-        // 폼 제출 가상 핸들러 (Alert 배제 규칙 적용)
+        // 폼 제출 핸들러 (워드프레스 AJAX DB 저장 연동)
         function submitForm(event) {
             event.preventDefault();
 
             const name = document.getElementById('form-name').value;
             const phone = document.getElementById('form-phone').value;
+            const debt = document.getElementById('form-debt-select').value;
+            const region = document.getElementById('form-region').value;
+            const message = document.getElementById('form-message').value;
+
+            // 제출 버튼 로딩 상태 표시
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin mr-2"></i> 처리 중...';
 
             if (name && phone) {
-                // 성공 모달 활성화
-                const modal = document.getElementById('success-modal');
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
+                // 전송할 폼 데이터 구성
+                const formData = new FormData();
+                formData.append('action', 'save_consultation');
+                formData.append('name', name);
+                formData.append('phone', phone);
+                formData.append('debt', debt);
+                formData.append('region', region);
+                formData.append('message', message);
+                formData.append('type', 'rehabilitation'); // 확장성을 위한 타입 태그 (회생파산)
 
-                // 개발자 콘솔용 웹훅 수신 모사 알림 기록
-                console.log(`[Python Webhook Simulator] 새 접수 감지 - 성함: ${name}, 연락처: ${phone}`);
+                // 워드프레스 AJAX 엔드포인트 호출
+                fetch('/wp-admin/admin-ajax.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
 
-                // 폼 초기화
-                document.getElementById('consult-form').reset();
+                    if (data.success) {
+                        // 성공 모달 활성화
+                        const modal = document.getElementById('success-modal');
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+
+                        // 개발자 콘솔 로그
+                        console.log(`[WP DB Saved] 새 상담 접수 완료 - 성함: ${name}, 연락처: ${phone}, ID: ${data.data.post_id}`);
+
+                        // 폼 초기화
+                        document.getElementById('consult-form').reset();
+                    } else {
+                        console.error('WP AJAX 에러:', data.data.message);
+                    }
+                })
+                .catch(error => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                    console.error('전송 실패:', error);
+                });
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
             }
         }
 
