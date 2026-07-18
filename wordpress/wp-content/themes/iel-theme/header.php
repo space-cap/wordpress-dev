@@ -20,20 +20,23 @@
 
 <body <?php body_class('bg-white text-black font-pretendard'); ?>>
     <?php wp_body_open(); ?>
-
     <!-- ============================================
          📢 개발자 포트폴리오 안내 배너
-         채용 담당자가 이 사이트의 목적을 즉시 파악할 수 있도록
-         항상 화면 최상단에 고정되는 배너입니다.
+         인라인 스타일로 position:fixed 확정 (CSS 클래스 충돌 방지)
          ============================================ -->
-    <div id="portfolio-banner" class="portfolio-banner-fixed">
-        <div class="portfolio-banner-inner">
-            <span class="portfolio-banner-icon">💼</span>
-            <p class="portfolio-banner-text">
+    <div id="portfolio-banner"
+        style="position:fixed; top:0; left:0; right:0; z-index:9999; background:linear-gradient(135deg,#0d1b3e 0%,#1a2f6e 50%,#0d1b3e 100%); border-bottom:1px solid rgba(0,110,255,0.25); display:flex; align-items:center; justify-content:center; min-height:48px; padding:6px 0;">
+        <div style="display:flex; align-items:center; justify-content:center; max-width:1520px; width:100%; padding:0 52px 0 20px; position:relative;">
+            <p style="font-size:13px; color:#ff4d4d; font-family:'Pretendard',sans-serif; font-weight:500; line-height:1.5; text-align:center; margin:0;">
                 본 사이트는 법무법인 이엘의 프로그래머 채용 지원을 위해 커스텀 워드프레스 테마로 직접 제작한 모의 리뉴얼 프로젝트입니다.
-                <a href="/developer-note/" class="portfolio-banner-link">개발자 노트 보기 →</a>
+                <a href="/developer-note/"
+                    style="display:inline-flex; align-items:center; color:#60a5fa; font-weight:700; font-size:13px; text-decoration:none; margin-left:8px; padding:2px 10px; border:1px solid rgba(96,165,250,0.4); border-radius:20px; white-space:nowrap;">
+                    개발자 노트 보기 →
+                </a>
             </p>
-            <button id="banner-close-btn" class="portfolio-banner-close" aria-label="배너 닫기" title="배너 닫기">
+            <button id="banner-close-btn" type="button"
+                style="position:absolute; right:12px; top:50%; transform:translateY(-50%); display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; border:none; background:rgba(255,255,255,0.12); color:rgba(255,255,255,0.75); cursor:pointer; padding:0; flex-shrink:0;"
+                aria-label="배너 닫기" title="배너 닫기">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                     stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -44,41 +47,62 @@
     </div>
 
     <script>
-        // 배너 닫기 — localStorage로 상태 영속화
+        // ============================================
+        // 배너 고정 및 닫기 — DOMContentLoaded 기반으로 안전하게 처리
+        // ============================================
         (function () {
-            var banner = document.getElementById('portfolio-banner');
-            var closeBtn = document.getElementById('banner-close-btn');
             var BANNER_KEY = 'iel_portfolio_banner_closed';
+            var BANNER_HEIGHT = 48; // px
 
-            // 이전에 닫은 적 있으면 즉시 숨김 (깜빡임 방지)
-            if (localStorage.getItem(BANNER_KEY) === '1') {
-                if (banner) {
-                    banner.style.display = 'none';
-                    document.documentElement.style.setProperty('--banner-height', '0px');
-                }
+            // GNB top을 배너 높이만큼 내리는 함수
+            function setGnbTop(px) {
+                var gnb = document.getElementById('gnb');
+                if (gnb) gnb.style.top = px + 'px';
+                document.documentElement.style.setProperty('--banner-height', px + 'px');
             }
 
-            if (closeBtn) {
+            // 배너를 완전히 숨기는 함수
+            function hideBanner() {
+                var banner = document.getElementById('portfolio-banner');
+                if (banner) banner.style.display = 'none';
+                setGnbTop(0);
+            }
+
+            // 이전에 닫은 적 있으면 → DOMContentLoaded 후 즉시 숨김
+            if (localStorage.getItem(BANNER_KEY) === '1') {
+                document.addEventListener('DOMContentLoaded', hideBanner);
+                return; // 이하 이벤트 바인딩 불필요
+            }
+
+            // GNB top 초기화 (DOM 준비 후)
+            document.addEventListener('DOMContentLoaded', function () {
+                setGnbTop(BANNER_HEIGHT);
+
+                var closeBtn = document.getElementById('banner-close-btn');
+                if (!closeBtn) return;
+
                 closeBtn.addEventListener('click', function () {
-                    banner.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    var banner = document.getElementById('portfolio-banner');
+                    if (!banner) return;
+
+                    // 페이드 아웃 애니메이션
+                    banner.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
                     banner.style.opacity = '0';
                     banner.style.transform = 'translateY(-100%)';
+
                     setTimeout(function () {
-                        banner.style.display = 'none';
-                        document.documentElement.style.setProperty('--banner-height', '0px');
-                        // GNB 위치도 즉시 재조정
-                        var gnb = document.getElementById('gnb');
-                        if (gnb) gnb.style.top = '0px';
-                    }, 300);
+                        hideBanner();
+                    }, 260);
+
                     localStorage.setItem(BANNER_KEY, '1');
                 });
-            }
+            });
         })();
     </script>
 
     <nav id="gnb"
         class="fixed left-0 right-0 z-50 w-full transition-all duration-300 bg-transparent border-b border-white/10"
-        style="top: var(--banner-height, 48px);">
+        style="top: 48px;">
         <div
             class="max-w-[1520px] mx-auto px-5 lg:px-10 py-4 lg:py-6 flex items-center justify-between transition-all duration-300">
             <!-- 로고 -->
