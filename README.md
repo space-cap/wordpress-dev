@@ -29,6 +29,10 @@
 * **비동기 간편 상담 DB 기록 (AJAX)**: 간편 상담 폼 제출 시 Fetch API를 활용해 워드프레스 AJAX 엔드포인트(`/wp-admin/admin-ajax.php`)로 전송, DB 마이그레이션이 필요 없는 CPT(Custom Post Type - `consultation`) 글 유형으로 DB에 안전하게 우회 저장합니다.
 * **확장성 스키마 및 전용 메타박스**: `_consult_type` 메타키에 구분자(예: `rehabilitation`, `sexual_crime`)를 함께 저장하도록 구성하여 향후 타 도메인 확장에 대비하고, 어드민 상세 화면에서 연락처, 부채규모, 지역 등을 일목요연하게 볼 수 있는 메타박스 전용 패널을 제공합니다.
 
+### 6. 기술적 SEO & AEO/GEO 최적화 (AI 검색 최적화)
+* **JSON-LD 기반 구조화 데이터 적용**: `LegalService`(로펌 법인 정보) 및 `JobPosting`(웹 프로그래머 채용 정보) 스키마 마크업을 `functions.php`의 `wp_head` 훅을 통해 페이지 조건에 맞춰 동적으로 주입함으로써 구글 및 네이버 검색 리치 스니펫 노출 확률을 높였습니다.
+* **AEO / GEO 최적화 FAQ 컴포넌트**: `FAQPage` 스키마 마크업과 연계하여, 회생파산 랜딩 페이지에 바닐라 JS 및 Tailwind CSS로 설계된 FAQ 아코디언 UI를 이식하여 AI 대답 엔진(Generative Engine Optimization)의 인용 출처 확보에 최적화했습니다.
+
 ---
 
 ## 🛠️ 기술 스택 (Tech Stack)
