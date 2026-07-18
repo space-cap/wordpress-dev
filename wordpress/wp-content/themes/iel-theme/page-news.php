@@ -8,11 +8,14 @@ get_header();
 ?>
 
 <!-- 히어로 섹션 -->
-<section class="relative pt-[120px] lg:pt-[200px] pb-[60px] lg:pb-[100px] bg-gradient-to-br from-[#0c1020] via-[#101b3a] to-[#0c1020] text-white overflow-hidden">
+<section
+    class="relative pt-[120px] lg:pt-[200px] pb-[60px] lg:pb-[100px] bg-gradient-to-br from-[#0c1020] via-[#101b3a] to-[#0c1020] text-white overflow-hidden">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,110,255,0.1),transparent_50%)]"></div>
     <div class="relative z-10 max-w-[1520px] mx-auto px-5 lg:px-10">
         <div class="max-w-[800px]" data-aos="fade-up" data-aos-duration="1000">
-            <span class="inline-block text-[#006eff] font-inter text-[14px] lg:text-[16px] font-bold tracking-widest uppercase mb-4">IEL NEWS</span>
+            <span
+                class="inline-block text-[#006eff] font-inter text-[14px] lg:text-[16px] font-bold tracking-widest uppercase mb-4">IEL
+                NEWS</span>
             <h1 class="font-pretendard text-[32px] lg:text-[54px] font-bold leading-tight tracking-tight mb-4">
                 이엘 소식 & 언론 보도
             </h1>
@@ -26,7 +29,7 @@ get_header();
 <!-- 뉴스 그리드 목록 섹션 -->
 <section class="py-20 bg-white">
     <div class="max-w-[1520px] mx-auto px-5 lg:px-10">
-        
+
         <?php
         // 워드프레스 포스트 쿼리 (분류가 있다면 분기 가능)
         $args = array(
@@ -37,19 +40,24 @@ get_header();
         $query = new WP_Query($args);
 
         // 'news' 카테고리의 실제 포스트가 존재할 경우에만 출력
-        if ($query->have_posts()) :
+        if ($query->have_posts()):
             ?>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
                 <?php
-                while ($query->have_posts()) : $query->the_post();
+                while ($query->have_posts()):
+                    $query->the_post();
                     ?>
-                    <article class="group bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300" data-aos="fade-up">
+                    <article
+                        class="group bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                        data-aos="fade-up">
                         <a href="<?php the_permalink(); ?>" class="block h-[240px] overflow-hidden relative bg-gray-100">
-                            <?php if (has_post_thumbnail()) : ?>
+                            <?php if (has_post_thumbnail()): ?>
                                 <?php the_post_thumbnail('medium_large', array('class' => 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-105')); ?>
-                            <?php else : ?>
+                            <?php else: ?>
                                 <!-- 기본 이미지 썸네일 -->
-                                <img src="https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg" alt="<?php the_title(); ?>" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <img src="https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg"
+                                    alt="<?php the_title(); ?>" loading="lazy"
+                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                             <?php endif; ?>
                         </a>
                         <div class="p-6 lg:p-8">
@@ -58,10 +66,12 @@ get_header();
                                 <span>•</span>
                                 <span><?php echo get_the_date('Y.m.d'); ?></span>
                             </div>
-                            <h3 class="font-pretendard text-[18px] lg:text-[21px] font-bold text-[#1a1a1a] leading-snug mb-3 group-hover:text-[#006eff] transition-colors duration-300 line-clamp-2">
+                            <h3
+                                class="font-pretendard text-[18px] lg:text-[21px] font-bold text-[#1a1a1a] leading-snug mb-3 group-hover:text-[#006eff] transition-colors duration-300 line-clamp-2">
                                 <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                             </h3>
-                            <p class="font-pretendard text-gray-500 text-[14px] lg:text-[15px] font-light leading-relaxed mb-4 line-clamp-3">
+                            <p
+                                class="font-pretendard text-gray-500 text-[14px] lg:text-[15px] font-light leading-relaxed mb-4 line-clamp-3">
                                 <?php echo wp_trim_words(get_the_excerpt(), 25); ?>
                             </p>
                         </div>
@@ -72,7 +82,7 @@ get_header();
                 ?>
             </div>
             <?php
-        else :
+        else:
             // 만약 등록된 포스트가 없는 경우: 고품격 데모 데이터 출력 (포트폴리오 보호)
             $mock_news = array(
                 array(
@@ -91,15 +101,19 @@ get_header();
                     'title' => '법무법인 이엘 서초 사옥 확장 이전 안내 (강남역 6번 출구 앞)',
                     'excerpt' => '의뢰인분들께 더 나아진 법률 상담 환경과 철저한 보안 상담실을 제공하기 위해 강남역 도보 1분 거리에 위치한 신축 랜드마크 타워로 주사무소를 이전하였습니다. 주차 및 방문 편의가 한층 강화되었습니다.',
                     'date' => '2026.05.15',
-                    'image' => 'https://images.pexels.com/photos/8111956/pexels-photo-8111956.jpeg'
+                    'image' => 'https://images.pexels.com/photos/273209/pexels-photo-273209.jpeg?auto=compress&cs=tinysrgb&w=800'
                 )
             );
             ?>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-                <?php foreach ($mock_news as $index => $news) : ?>
-                    <article class="group bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="<?php echo $index * 100; ?>">
+                <?php foreach ($mock_news as $index => $news): ?>
+                    <article
+                        class="group bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                        data-aos="fade-up" data-aos-delay="<?php echo $index * 100; ?>">
                         <div class="h-[240px] overflow-hidden relative bg-gray-100">
-                            <img src="<?php echo $news['image']; ?>" alt="<?php echo esc_attr($news['title']); ?>" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            <img src="<?php echo $news['image']; ?>" alt="<?php echo esc_attr($news['title']); ?>"
+                                loading="lazy"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                         </div>
                         <div class="p-6 lg:p-8">
                             <div class="flex items-center gap-3 text-gray-400 text-[13px] mb-3">
@@ -107,10 +121,12 @@ get_header();
                                 <span>•</span>
                                 <span><?php echo $news['date']; ?></span>
                             </div>
-                            <h3 class="font-pretendard text-[18px] lg:text-[21px] font-bold text-[#1a1a1a] leading-snug mb-3 group-hover:text-[#006eff] transition-colors duration-300 line-clamp-2">
+                            <h3
+                                class="font-pretendard text-[18px] lg:text-[21px] font-bold text-[#1a1a1a] leading-snug mb-3 group-hover:text-[#006eff] transition-colors duration-300 line-clamp-2">
                                 <?php echo $news['title']; ?>
                             </h3>
-                            <p class="font-pretendard text-gray-500 text-[14px] lg:text-[15px] font-light leading-relaxed mb-4 line-clamp-3">
+                            <p
+                                class="font-pretendard text-gray-500 text-[14px] lg:text-[15px] font-light leading-relaxed mb-4 line-clamp-3">
                                 <?php echo $news['excerpt']; ?>
                             </p>
                         </div>
