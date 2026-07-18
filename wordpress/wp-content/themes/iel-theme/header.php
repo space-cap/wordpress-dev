@@ -21,8 +21,62 @@
 <body <?php body_class('bg-white text-black font-pretendard'); ?>>
     <?php wp_body_open(); ?>
 
+    <!-- ============================================
+         📢 개발자 포트폴리오 안내 배너
+         채용 담당자가 이 사이트의 목적을 즉시 파악할 수 있도록
+         항상 화면 최상단에 고정되는 배너입니다.
+         ============================================ -->
+    <div id="portfolio-banner" class="portfolio-banner-fixed">
+        <div class="portfolio-banner-inner">
+            <span class="portfolio-banner-icon">💼</span>
+            <p class="portfolio-banner-text">
+                본 사이트는 법무법인 이엘의 프로그래머 채용 지원을 위해 커스텀 워드프레스 테마로 직접 제작한 모의 리뉴얼 프로젝트입니다.
+                <a href="/developer-note/" class="portfolio-banner-link">개발자 노트 보기 →</a>
+            </p>
+            <button id="banner-close-btn" class="portfolio-banner-close" aria-label="배너 닫기" title="배너 닫기">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 배너 닫기 — localStorage로 상태 영속화
+        (function () {
+            var banner = document.getElementById('portfolio-banner');
+            var closeBtn = document.getElementById('banner-close-btn');
+            var BANNER_KEY = 'iel_portfolio_banner_closed';
+
+            // 이전에 닫은 적 있으면 즉시 숨김 (깜빡임 방지)
+            if (localStorage.getItem(BANNER_KEY) === '1') {
+                if (banner) {
+                    banner.style.display = 'none';
+                    document.documentElement.style.setProperty('--banner-height', '0px');
+                }
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function () {
+                    banner.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    banner.style.opacity = '0';
+                    banner.style.transform = 'translateY(-100%)';
+                    setTimeout(function () {
+                        banner.style.display = 'none';
+                        document.documentElement.style.setProperty('--banner-height', '0px');
+                        // GNB 위치도 즉시 재조정
+                        var gnb = document.getElementById('gnb');
+                        if (gnb) gnb.style.top = '0px';
+                    }, 300);
+                    localStorage.setItem(BANNER_KEY, '1');
+                });
+            }
+        })();
+    </script>
+
     <nav id="gnb"
-        class="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 bg-transparent border-b border-white/10">
+        class="fixed left-0 right-0 z-50 w-full transition-all duration-300 bg-transparent border-b border-white/10" style="top: var(--banner-height, 48px);">
         <div
             class="max-w-[1520px] mx-auto px-5 lg:px-10 py-4 lg:py-6 flex items-center justify-between transition-all duration-300">
             <!-- 로고 -->
@@ -71,6 +125,17 @@
                     <li><a href="/contact/"
                             class="gnb-menu-link text-[18px] font-medium text-white hover:opacity-75 transition-all duration-300 px-5 py-2.5 rounded-full border border-white/20 hover:border-white/50 hover:bg-white/10 transition-all duration-300">상담
                             신청</a></li>
+                    <!-- 개발자 노트 메뉴 (채용 담당자용) -->
+                    <li>
+                        <a href="/developer-note/"
+                            class="gnb-menu-link text-[15px] font-semibold text-[#006eff] hover:opacity-80 transition-all duration-300 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006eff]/30 hover:border-[#006eff]/70 hover:bg-[#006eff]/10"
+                            title="커스텀 테마 개발 포트폴리오 노트">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                            </svg>
+                            Dev Note
+                        </a>
+                    </li>
 
                     <!-- 테마 토글 버튼 (데스크톱) -->
                     <li>
@@ -161,6 +226,16 @@
                 </li>
                 <li><a href="/careers/" class="text-[24px] font-semibold text-white tracking-wide">인재 채용</a></li>
                 <li><a href="/contact/" class="text-[24px] font-semibold text-white tracking-wide">상담 신청</a></li>
+                <!-- 개발자 노트 메뉴 (모바일) -->
+                <li>
+                    <a href="/developer-note/" class="text-[24px] font-semibold tracking-wide flex items-center gap-3"
+                        style="color: #006eff;">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                        개발자 노트
+                    </a>
+                </li>
             </ul>
             <div class="text-[14px] text-gray-500 font-light shrink-0">
                 © 2026 Legal Firm IEL. All Rights Reserved.

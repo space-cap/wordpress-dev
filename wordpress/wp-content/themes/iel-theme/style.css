@@ -124,3 +124,157 @@ html.dark #float-tel {
     color: #ffffff !important;
 }
 
+/* ============================================
+   📢 포트폴리오 안내 배너 스타일
+   채용 담당자를 위해 사이트 최상단에 고정 표시
+   ============================================ */
+
+/* CSS 변수: 배너 높이. JS에서 동적으로 0px로 변경 가능 */
+:root {
+    --banner-height: 48px;
+}
+
+/* 배너 본체 — 화면 최상단 고정 */
+.portfolio-banner-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100; /* GNB z-index(50)보다 높게 */
+    height: var(--banner-height);
+    background: linear-gradient(135deg, #0d1b3e 0%, #1a2f6e 50%, #0d1b3e 100%);
+    background-size: 200% 100%;
+    animation: bannerGradientShift 6s ease infinite;
+    border-bottom: 1px solid rgba(0, 110, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes bannerGradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 배너 내부 컨텐츠 래퍼 */
+.portfolio-banner-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    max-width: 1520px;
+    width: 100%;
+    padding: 0 20px;
+    position: relative;
+}
+
+/* 💼 아이콘 */
+.portfolio-banner-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    display: none; /* 모바일에서는 숨김 */
+}
+
+/* 배너 텍스트 */
+.portfolio-banner-text {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 400;
+    line-height: 1.4;
+    text-align: center;
+    margin: 0;
+    flex: 1;
+}
+
+/* [개발자 노트 보기] 링크 */
+.portfolio-banner-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #60a5fa;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    margin-left: 6px;
+    padding: 2px 10px;
+    border: 1px solid rgba(96, 165, 250, 0.4);
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.portfolio-banner-link:hover {
+    color: #ffffff;
+    background: rgba(96, 165, 250, 0.2);
+    border-color: rgba(96, 165, 250, 0.7);
+    text-decoration: none;
+}
+
+/* 닫기(X) 버튼 */
+.portfolio-banner-close {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+.portfolio-banner-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+/* 데스크톱(1024px 이상) — 아이콘 노출, 텍스트 크기 업 */
+@media (min-width: 1024px) {
+    .portfolio-banner-icon {
+        display: inline;
+    }
+    .portfolio-banner-text {
+        font-size: 14px;
+    }
+}
+
+/* 모바일(767px 이하) — 배너 높이 늘리고 텍스트 압축 */
+@media (max-width: 767px) {
+    :root {
+        --banner-height: 56px;
+    }
+    .portfolio-banner-fixed {
+        height: var(--banner-height);
+    }
+    .portfolio-banner-text {
+        font-size: 11.5px;
+    }
+    .portfolio-banner-link {
+        font-size: 11.5px;
+        padding: 2px 8px;
+        margin-left: 4px;
+    }
+    .portfolio-banner-close {
+        right: 8px;
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* 다크모드에서도 배너는 항상 어두운 색상 유지 */
+html.dark .portfolio-banner-fixed {
+    background: linear-gradient(135deg, #0a1628 0%, #0f1f4d 50%, #0a1628 100%);
+    border-bottom-color: rgba(0, 110, 255, 0.2);
+}
+
+

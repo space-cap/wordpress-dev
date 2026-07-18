@@ -115,7 +115,13 @@ function iel_create_default_pages() {
         'contact' => array(
             'title' => '상담 신청',
             'template' => 'page-contact.php'
+        ),
+        // 개발자 노트 — 채용 담당자 포트폴리오 전용 페이지
+        'developer-note' => array(
+            'title' => '개발자 노트',
+            'template' => 'page-developer-note.php'
         )
+
     );
 
     $needs_flush = false;
