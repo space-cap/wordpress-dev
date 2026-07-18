@@ -515,6 +515,49 @@ function paradin_inject_job_posting_schema()
 add_action('wp_head', 'paradin_inject_job_posting_schema');
 
 
+// 3. 회생파산 전담센터 FAQ (FAQPage) 스키마 주입
+function paradin_inject_faq_schema()
+{
+    // 회생파산 랜딩 페이지 템플릿일 때 작동
+    if (is_page_template('landing/page-rehabilitation.php')) {
+        $schema = array(
+            "@context" => "https://schema.org",
+            "@type" => "FAQPage",
+            "mainEntity" => array(
+                array(
+                    "@type" => "Question",
+                    "name" => "개인회생을 신청하면 직장이나 가족들이 알게 되나요?",
+                    "acceptedAnswer" => array(
+                        "@type" => "Answer",
+                        "text" => "전혀 그렇지 않습니다. 개인회생 신청 및 진행 절차는 철저한 비공개를 원칙으로 하며, 법원 우편물 또한 송달 장소를 법무법인 파라딘 사무실로 지정하여 의뢰인의 직장이나 가족이 인지할 수 없도록 철저히 비밀 유지를 엄수합니다."
+                    )
+                ),
+                array(
+                    "@type" => "Question",
+                    "name" => "채무 연체 전에도 신청이 가능한가요?",
+                    "acceptedAnswer" => array(
+                        "@type" => "Answer",
+                        "text" => "네, 연체 전이라도 신청이 가능합니다. 다가올 채무 변제가 불가능하여 파산에 직면할 염려가 있는 상태라면 선제적으로 신청하실 수 있습니다. 오히려 연체가 시작되어 채권추심 독촉 전화를 받기 전에 신속히 금지명령을 받아 재산을 지켜내는 것이 유리합니다."
+                    )
+                ),
+                array(
+                    "@type" => "Question",
+                    "name" => "기각이 나면 정말 수임료를 100% 환불해 주시나요?",
+                    "acceptedAnswer" => array(
+                        "@type" => "Answer",
+                        "text" => "네, 기각 시 100% 수임료 환불을 원칙으로 계약서에 명시합니다. 법무법인 파라딘은 다년간의 성공 노하우를 바탕으로 서류 분석 시 면밀히 진단하여 기각 우려가 없는 사건만 수행하므로 안심하고 진행하실 수 있습니다. (단, 본인의 고의적인 서류 은폐나 위조 등 의뢰인 귀책사유는 제외됩니다.)"
+                    )
+                )
+            )
+        );
+        echo "\n" . '<!-- JSON-LD FAQPage Schema 주입 -->' . "\n";
+        echo '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . '</script>' . "\n";
+    }
+}
+add_action('wp_head', 'paradin_inject_faq_schema');
+
+
+
 
 
 

@@ -469,6 +469,107 @@
         </div>
     </section>
 
+    <!-- FAQ (자주 묻는 질문) 섹션 - AEO 최적화 -->
+    <section id="faq" class="py-20 px-6 bg-slate-50 border-t border-slate-100">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <span class="text-paradin-600 font-bold text-xs tracking-widest uppercase">Frequently Asked
+                    Questions</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">회생·파산 자주 묻는 질문</h2>
+                <p class="text-slate-500 text-sm md:text-base leading-relaxed">의뢰인분들이 가장 많이 질문하시고 걱정하시는 부분들을 명쾌하게 설명해
+                    드립니다.</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- 아코디언 아이템 1 -->
+                <div
+                    class="bg-white border border-slate-200/80 rounded-2xl overflow-hidden transition-all duration-300 shadow-sm hover:shadow-md">
+                    <button class="w-full flex items-center justify-between p-6 text-left focus:outline-none faq-btn"
+                        data-target="faq-ans-1">
+                        <span class="font-bold text-slate-900 text-base md:text-lg">Q. 개인회생을 신청하면 직장이나 가족들이 알게
+                            되나요?</span>
+                        <i
+                            class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 faq-icon"></i>
+                    </button>
+                    <div id="faq-ans-1"
+                        class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-slate-50">
+                        <div class="p-6 text-slate-600 text-sm md:text-base leading-relaxed border-t border-slate-100">
+                            <strong>전혀 그렇지 않습니다.</strong> 개인회생 신청 및 진행 절차는 철저한 비공개를 원칙으로 하며, 법원 우편물 또한 송달 장소를 법무법인 파라딘
+                            사무실로 지정하여 의뢰인의 직장이나 가족이 인지할 수 없도록 철저히 비밀 유지를 엄수합니다.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 아코디언 아이템 2 -->
+                <div
+                    class="bg-white border border-slate-200/80 rounded-2xl overflow-hidden transition-all duration-300 shadow-sm hover:shadow-md">
+                    <button class="w-full flex items-center justify-between p-6 text-left focus:outline-none faq-btn"
+                        data-target="faq-ans-2">
+                        <span class="font-bold text-slate-900 text-base md:text-lg">Q. 채무 연체 전에도 신청이 가능한가요?</span>
+                        <i
+                            class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 faq-icon"></i>
+                    </button>
+                    <div id="faq-ans-2"
+                        class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-slate-50">
+                        <div class="p-6 text-slate-600 text-sm md:text-base leading-relaxed border-t border-slate-100">
+                            <strong>네, 연체 전이라도 신청이 가능합니다.</strong> 다가올 채무 변제가 불가능하여 파산에 직면할 염려가 있는 상태라면 선제적으로 신청하실 수
+                            있습니다. 오히려 연체가 시작되어 채권추심 독촉 전화를 받기 전에 신속히 금지명령을 받아 재산을 지켜내는 것이 유리합니다.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 아코디언 아이템 3 -->
+                <div
+                    class="bg-white border border-slate-200/80 rounded-2xl overflow-hidden transition-all duration-300 shadow-sm hover:shadow-md">
+                    <button class="w-full flex items-center justify-between p-6 text-left focus:outline-none faq-btn"
+                        data-target="faq-ans-3">
+                        <span class="font-bold text-slate-900 text-base md:text-lg">Q. 기각이 나면 정말 수임료를 100% 환불해
+                            주시나요?</span>
+                        <i
+                            class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 faq-icon"></i>
+                    </button>
+                    <div id="faq-ans-3"
+                        class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-slate-50">
+                        <div class="p-6 text-slate-600 text-sm md:text-base leading-relaxed border-t border-slate-100">
+                            <strong>네, 기각 시 100% 수임료 환불을 원칙으로 계약서에 명시합니다.</strong> 법무법인 파라딘은 다년간의 성공 노하우를 바탕으로 서류 분석 시
+                            면밀히 진단하여 기각 우려가 없는 사건만 수행하므로 안심하고 진행하실 수 있습니다. (단, 본인의 고의적인 서류 은폐나 위조 등 의뢰인 귀책사유는 제외됩니다.)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ 아코디언 제어 스크립트 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const faqBtns = document.querySelectorAll('.faq-btn');
+            faqBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const targetId = this.getAttribute('data-target');
+                    const target = document.getElementById(targetId);
+                    const icon = this.querySelector('.faq-icon');
+
+                    if (target.style.maxHeight && target.style.maxHeight !== '0px') {
+                        target.style.maxHeight = '0px';
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        // 다른 열린 FAQ 아코디언 닫기
+                        document.querySelectorAll('.faq-btn').forEach(b => {
+                            const otherTarget = document.getElementById(b.getAttribute('data-target'));
+                            const otherIcon = b.querySelector('.faq-icon');
+                            otherTarget.style.maxHeight = '0px';
+                            otherIcon.classList.remove('rotate-180');
+                        });
+
+                        target.style.maxHeight = target.scrollHeight + 'px';
+                        icon.classList.add('rotate-180');
+                    }
+                });
+            });
+        });
+    </script>
+
     <!-- 무료 상담 예약 폼 섹션 -->
     <section id="consultation" class="py-20 px-6 bg-slate-50">
         <div class="max-w-3xl mx-auto bg-white rounded-3xl border border-slate-200/60 p-8 md:p-12 shadow-2xl relative">
