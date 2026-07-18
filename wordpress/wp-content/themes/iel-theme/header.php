@@ -26,8 +26,10 @@
          ============================================ -->
     <div id="portfolio-banner"
         style="position:fixed; top:0; left:0; right:0; z-index:9999; background:linear-gradient(135deg,#0d1b3e 0%,#1a2f6e 50%,#0d1b3e 100%); border-bottom:1px solid rgba(0,110,255,0.25); display:flex; align-items:center; justify-content:center; min-height:48px; padding:6px 0;">
-        <div style="display:flex; align-items:center; justify-content:center; max-width:1520px; width:100%; padding:0 52px 0 20px; position:relative;">
-            <p style="font-size:13px; color:#ff4d4d; font-family:'Pretendard',sans-serif; font-weight:500; line-height:1.5; text-align:center; margin:0;">
+        <div
+            style="display:flex; align-items:center; justify-content:center; max-width:1520px; width:100%; padding:0 52px 0 20px; position:relative;">
+            <p
+                style="font-size:13px; color:#ff4d4d; font-family:'Pretendard',sans-serif; font-weight:500; line-height:1.5; text-align:center; margin:0;">
                 본 사이트는 법무법인 이엘의 프로그래머 채용 지원을 위해 커스텀 워드프레스 테마로 직접 제작한 모의 리뉴얼 프로젝트입니다.
                 <a href="/developer-note/"
                     style="display:inline-flex; align-items:center; color:#60a5fa; font-weight:700; font-size:13px; text-decoration:none; margin-left:8px; padding:2px 10px; border:1px solid rgba(96,165,250,0.4); border-radius:20px; white-space:nowrap;">
@@ -69,7 +71,7 @@
             }
 
             // 이전에 닫은 적 있으면 → DOMContentLoaded 후 즉시 숨김
-            if (localStorage.getItem(BANNER_KEY) === '1') {
+            if (sessionStorage.getItem(BANNER_KEY) === '1') {
                 document.addEventListener('DOMContentLoaded', hideBanner);
                 return; // 이하 이벤트 바인딩 불필요
             }
@@ -94,7 +96,7 @@
                         hideBanner();
                     }, 260);
 
-                    localStorage.setItem(BANNER_KEY, '1');
+                    sessionStorage.setItem(BANNER_KEY, '1');
                 });
             });
         })();
