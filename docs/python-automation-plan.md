@@ -18,7 +18,7 @@ sequenceDiagram
 
     의뢰인->>WP: 1. 상담 신청 접수
     WP->>WP: 2. DB 저장 및 php 훅 트리거 (wp_insert_post)
-    WP->>Py: 3. 실시간 Webhook POST 전송 (http://automation:8000/webhook)
+    WP->>Py: 3. 실시간 Webhook POST 전송 (http://automation:8089/webhook)
     Note over Py: 4. FastAPI 비동기 데이터 수신
     Py->>GS: 5. Google Sheets API 연동 (행 삽입)
     Py->>Slack: 6. Slack API 연동 (실시간 카드 알림)
@@ -31,7 +31,7 @@ sequenceDiagram
 ### ① 워드프레스 웹훅 발송기 (WordPress PHP Webhook Sender)
 * **위치:** `functions.php` 하단
 * **역할:** 상담 CPT(`consultation`)가 생성되면, 해당 메타 데이터를 모아 파이썬 컨테이너로 JSON POST 요청을 보냅니다.
-* **통신 경로:** 도커 내부 DNS를 사용하므로, localhost IP 대신 컨테이너 서비스 이름(`http://automation:8000/webhook`)으로 직결 통신합니다.
+* **통신 경로:** 도커 내부 DNS를 사용하므로, localhost IP 대신 컨테이너 서비스 이름(`http://automation:8089/webhook`)으로 직결 통신합니다.
 
 ### ② 파이썬 FastAPI 비동기 수신서버 (Python FastAPI Web Server)
 * **위치:** `automation/main.py`
@@ -66,7 +66,7 @@ services:
     container_name: paradin-automation
     restart: always
     ports:
-      - "8000:8000"
+      - "8089:8089"
     volumes:
       - ./automation:/app
       - /app/venv # 볼륨 마운트 시 가상환경 폴더 공유 예외 처리
@@ -112,9 +112,9 @@ RUN uv pip install --no-cache --system -r requirements.txt
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE 8089
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8089", "--reload"]
 ```
 
 ### 📄 파이썬 의존성 패키지 (`automation/requirements.txt`)
@@ -142,7 +142,7 @@ python-dotenv==1.0.0
    ```bash
    docker compose logs -f automation
    ```
-   * uvicorn 서버가 `http://0.0.0.0:8000`에서 요청을 정상 대기하고 있는지 로그를 통해 파악합니다.
+   * uvicorn 서버가 `http://0.0.0.0:8089`에서 요청을 정상 대기하고 있는지 로그를 통해 파악합니다.
 
 ### 💡 (옵션) 로컬 개발 환경에서 uv 수동 실행 가이드
 만약 도커 컨테이너를 쓰지 않고 로컬 맥미니 환경에서 직접 파이썬 서버를 실행할 때는 다음 `uv` 명령어를 활용합니다.
@@ -172,6 +172,6 @@ python-dotenv==1.0.0
 
 1. **도커 컴포즈 업데이트:** `docker-compose.yml` 파일에 `automation` 구문을 안전하게 주입합니다.
 2. **파이썬 모듈 코드베이스 작성:** `automation/` 디렉토리를 생성하고 `Dockerfile`, `main.py`, `requirements.txt`, `.env.example`을 작성합니다.
-3. **워드프레스 웹훅 이식:** `functions.php`에 상담 글 저장 이벤트 시 `wp_remote_post()` 함수를 써서 `http://automation:8000/webhook`으로 JSON을 전송하는 PHP 후킹 코드를 작성합니다.
+3. **워드프레스 웹훅 이식:** `functions.php`에 상담 글 저장 이벤트 시 `wp_remote_post()` 함수를 써서 `http://automation:8089/webhook`으로 JSON을 전송하는 PHP 후킹 코드를 작성합니다.
 4. **최종 통합 테스트 및 README.md 보완:** 도커 컴포즈 실행법 및 `uv` 사용 매뉴얼을 README에 명시하여 마무리합니다.
 
