@@ -215,4 +215,21 @@ function iel_convert_upload_to_webp($uploads)
 add_filter('wp_handle_upload', 'iel_convert_upload_to_webp');
 
 
+/**
+ * 뉴스 카테고리(news)의 글에 대해 전용 템플릿(single-news.php) 사용하도록 설정
+ */
+function iel_single_template_for_news($template)
+{
+    if (is_single() && in_category('news')) {
+        $new_template = locate_template(array('single-news.php'));
+        if (!empty($new_template)) {
+            return $new_template;
+        }
+    }
+    return $template;
+}
+add_filter('single_template', 'iel_single_template_for_news');
+
+
+
 
