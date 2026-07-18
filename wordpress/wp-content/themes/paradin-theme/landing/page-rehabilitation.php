@@ -835,31 +835,31 @@ add_action('wp_head', 'inject_legal_service_schema');</pre>
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.json())
-                .then(data => {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalBtnText;
+                    .then(response => response.json())
+                    .then(data => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
 
-                    if (data.success) {
-                        // 성공 모달 활성화
-                        const modal = document.getElementById('success-modal');
-                        modal.classList.remove('hidden');
-                        modal.classList.add('flex');
+                        if (data.success) {
+                            // 성공 모달 활성화
+                            const modal = document.getElementById('success-modal');
+                            modal.classList.remove('hidden');
+                            modal.classList.add('flex');
 
-                        // 개발자 콘솔 로그
-                        console.log(`[WP DB Saved] 새 상담 접수 완료 - 성함: ${name}, 연락처: ${phone}, ID: ${data.data.post_id}`);
+                            // 개발자 콘솔 로그
+                            console.log(`[WP DB Saved] 새 상담 접수 완료 - 성함: ${name}, 연락처: ${phone}, ID: ${data.data.post_id}`);
 
-                        // 폼 초기화
-                        document.getElementById('consult-form').reset();
-                    } else {
-                        console.error('WP AJAX 에러:', data.data.message);
-                    }
-                })
-                .catch(error => {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalBtnText;
-                    console.error('전송 실패:', error);
-                });
+                            // 폼 초기화
+                            document.getElementById('consult-form').reset();
+                        } else {
+                            console.error('WP AJAX 에러:', data.data.message);
+                        }
+                    })
+                    .catch(error => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                        console.error('전송 실패:', error);
+                    });
             } else {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
