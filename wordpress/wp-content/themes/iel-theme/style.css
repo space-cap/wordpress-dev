@@ -197,9 +197,9 @@ html.dark #float-tel {
 /* 배너 텍스트 */
 .portfolio-banner-text {
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.85);
+    color: #ff4d4d;
     font-family: 'Pretendard', sans-serif;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.4;
     text-align: center;
     margin: 0;
