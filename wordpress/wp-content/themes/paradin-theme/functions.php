@@ -421,6 +421,9 @@ function paradin_ajax_save_consultation()
     update_post_meta($post_id, '_consult_message', $message);
     update_post_meta($post_id, '_consult_type', $type);
 
+    // 🆕 메타데이터가 완전히 저장된 후에 수동으로 웹훅 호출 (데이터 누락 방지)
+    paradin_send_consultation_webhook($post_id, get_post($post_id), false);
+
     // 성공 응답 반환
     wp_send_json_success(array(
         'message' => '성공적으로 접수되었습니다.',
@@ -564,6 +567,11 @@ add_action('wp_head', 'paradin_inject_faq_schema');
  */
 function paradin_send_consultation_webhook($post_id, $post, $update)
 {
+    // 🆕 AJAX 요청에 의해 자동 트리거된 것은 건너뜀 (AJAX 핸들러 내에서 메타데이터 완료 후 수동 발송함)
+    if (wp_doing_ajax() && doing_action('save_post_consultation')) {
+        return;
+    }
+
     // 업데이트 작업이거나 자동 저장일 때는 패스 (신규 등록만 처리)
     if ($update || wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
         return;
@@ -595,12 +603,12 @@ function paradin_send_consultation_webhook($post_id, $post, $update)
     // 파이썬 자동화 서버 웹훅 수신 URL (도커 컴포즈 서비스명 기준)
     $webhook_url = 'http://automation:8089/webhook';
 
-    // 비동기 형태로 신속하게 발송하기 위해 타임아웃을 짧게 지정
+    // 🆕 blocking => true로 설정하여 웹훅 전송을 끝까지 확실하게 보장함
     $args = array(
         'body'        => json_encode($body),
         'headers'     => array('Content-Type' => 'application/json; charset=utf-8'),
-        'timeout'     => 3,
-        'blocking'    => false, // 결과 응답을 기다리지 않고 백그라운드 발송하여 웹페이지 로딩 차단 방지
+        'timeout'     => 5,
+        'blocking'    => true, 
         'data_format' => 'body'
     );
 
