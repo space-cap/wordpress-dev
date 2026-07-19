@@ -36,6 +36,10 @@ vendor/
 wordpress/wp-config.php
 wordpress/wp-config-local.php
 .env
+automation/.env
+automation/credentials.json
+automation/venv/
+automation/.venv/
 docker-compose.override.yml
 
 # --- 워드프레스 콘텐츠, 캐시 및 업로드 파일 ---
