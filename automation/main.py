@@ -39,6 +39,10 @@ def sync_to_google_sheet(data: ConsultationPayload):
     try:
         credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "/app/credentials.json")
         
+        # 🆕 로컬 개발 환경(Windows/uv) 대응: 설정된 경로가 없고 로컬 폴더에 credentials.json이 있다면 자동 대체
+        if not os.path.exists(credentials_path) and os.path.exists("credentials.json"):
+            credentials_path = "credentials.json"
+        
         if not os.path.exists(credentials_path):
             logger.warning(f"구글 인증 파일({credentials_path})이 존재하지 않아 시트 동기화를 건너뜁니다.")
             return
