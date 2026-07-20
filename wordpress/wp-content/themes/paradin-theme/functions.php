@@ -612,7 +612,15 @@ function paradin_send_consultation_webhook($post_id, $post, $update)
         'data_format' => 'body'
     );
 
-    wp_remote_post($webhook_url, $args);
+    $response = wp_remote_post($webhook_url, $args);
+
+    // 🆕 웹훅 실행 결과 로깅 (디버깅용)
+    if (is_wp_error($response)) {
+        error_log('PARADIN Webhook Error: ' . $response->get_error_message());
+    } else {
+        $response_code = wp_remote_retrieve_response_code($response);
+        error_log('PARADIN Webhook Success! HTTP Code: ' . $response_code);
+    }
 }
 // save_post 훅에 등록 (우선순위 20으로 메타데이터가 먼저 저장된 뒤 실행되도록 함)
 add_action('save_post_consultation', 'paradin_send_consultation_webhook', 20, 3);
