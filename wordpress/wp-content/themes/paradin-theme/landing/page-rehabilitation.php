@@ -588,13 +588,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-2">의뢰인 성함</label>
-                        <input type="text" required id="form-name"
+                        <input type="text" required id="form-name" maxlength="20"
                             class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-paradin-500 focus:bg-white text-slate-900"
                             placeholder="홍길동">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-2">연락처</label>
-                        <input type="tel" required id="form-phone"
+                        <input type="tel" required id="form-phone" oninput="autoHyphen(this)" maxlength="13"
                             class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-paradin-500 focus:bg-white text-slate-900"
                             placeholder="010-1234-5678">
                     </div>
@@ -830,6 +830,37 @@ add_action('wp_head', 'inject_legal_service_schema');</pre>
     </div>
 
     <script>
+        // 연락처 하이픈 자동 추가 함수 (유선 및 휴대폰 자릿수 분기)
+        function autoHyphen(target) {
+            let value = target.value.replace(/[^0-9]/g, '');
+            let formatted = '';
+
+            if (value.startsWith('02')) {
+                // 서울 번호 (02)인 경우
+                if (value.length < 3) {
+                    formatted = value;
+                } else if (value.length < 6) {
+                    formatted = value.substring(0, 2) + '-' + value.substring(2);
+                } else if (value.length < 10) {
+                    formatted = value.substring(0, 2) + '-' + value.substring(2, 5) + '-' + value.substring(5);
+                } else {
+                    formatted = value.substring(0, 2) + '-' + value.substring(2, 6) + '-' + value.substring(6, 10);
+                }
+            } else {
+                // 휴대폰 및 일반 지역 번호인 경우
+                if (value.length < 4) {
+                    formatted = value;
+                } else if (value.length < 7) {
+                    formatted = value.substring(0, 3) + '-' + value.substring(3);
+                } else if (value.length < 11) {
+                    formatted = value.substring(0, 3) + '-' + value.substring(3, 6) + '-' + value.substring(6);
+                } else {
+                    formatted = value.substring(0, 3) + '-' + value.substring(3, 7) + '-' + value.substring(7, 11);
+                }
+            }
+            target.value = formatted;
+        }
+
         // 부양 가족수 제어용 전역 변수
         let currentDependents = 1;
 
