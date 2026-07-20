@@ -12,6 +12,8 @@ services:
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_USER: wpuser
       WORDPRESS_DB_PASSWORD: wppass
+      no_proxy: "localhost,127.0.0.1,automation,paradin-automation,host.docker.internal"
+      NO_PROXY: "localhost,127.0.0.1,automation,paradin-automation,host.docker.internal"
 
     volumes:
       - ./wordpress:/var/www/html
