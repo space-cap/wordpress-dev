@@ -591,13 +591,13 @@ function paradin_send_consultation_webhook($post_id, $post, $update)
 
     // 파이썬 웹훅 수신 규격에 맞는 데이터 맵 구성
     $body = array(
-        'name'    => $post->post_title,
-        'phone'   => $phone ? $phone : '미입력',
-        'debt'    => $debt ? $debt : '미입력',
-        'region'  => $region ? $region : '미입력',
+        'name' => $post->post_title,
+        'phone' => $phone ? $phone : '미입력',
+        'debt' => $debt ? $debt : '미입력',
+        'region' => $region ? $region : '미입력',
         'message' => $message ? $message : '상황 설명이 없습니다.',
-        'type'    => $type ? $type : 'rehabilitation',
-        'date'    => get_the_date('Y-m-d H:i:s', $post_id)
+        'type' => $type ? $type : 'rehabilitation',
+        'date' => get_the_date('Y-m-d H:i:s', $post_id)
     );
 
     // 파이썬 자동화 서버 웹훅 수신 URL (도커 컴포즈 서비스명 기준)
@@ -605,10 +605,10 @@ function paradin_send_consultation_webhook($post_id, $post, $update)
 
     // 🆕 blocking => true로 설정하여 웹훅 전송을 끝까지 확실하게 보장함
     $args = array(
-        'body'        => json_encode($body),
-        'headers'     => array('Content-Type' => 'application/json; charset=utf-8'),
-        'timeout'     => 5,
-        'blocking'    => true, 
+        'body' => json_encode($body),
+        'headers' => array('Content-Type' => 'application/json; charset=utf-8'),
+        'timeout' => 5,
+        'blocking' => true,
         'data_format' => 'body'
     );
 
