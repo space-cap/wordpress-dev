@@ -111,3 +111,12 @@ wordpress/wp-content/themes/*
 !wordpress/wp-content/themes/iel-theme/
 !wordpress/wp-content/themes/paradin-theme/
 !wordpress/wp-content/mu-plugins/
+
+# --- Python 관련 파일 ---
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
