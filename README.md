@@ -132,22 +132,26 @@ uvicorn main:app --port 8089 --reload
 
 ---
 
-## 👤 개발자 소개 및 포트폴리오 활용 안내
+## 👤 개발자 소개 및 포트폴리오 안내
 
-본 프로젝트는 **[법무법인 이엘 웹 프로그래머 채용공고]** 의 요구사항을 기준으로, 실무 역량을 직접 코드로 입증하기 위해 제작된 포트폴리오 저장소입니다.
+본 프로젝트는 워드프레스 커스텀 테마 개발 역량을 실제 코드로 증명하기 위해 제작된 **풀스택 포트폴리오 저장소**입니다.
 
-| 채용공고 요구/우대사항 | 본 프로젝트에서의 증명 |
+기획부터 퍼블리싱, 백엔드 연동, SEO 최적화, 업무 자동화까지 웹 서비스 구축에 필요한 전 과정을 직접 설계하고 구현했습니다.
+
+### 🧩 구현 역량 요약
+
+| 영역 | 구현 내용 |
 |---|---|
-| WordPress 구축 및 운영 | 커스텀 테마 전체 설계 및 Docker 기반 운영 |
-| HTML, CSS, JavaScript | 모든 템플릿 직접 마크업 · 바닐라 JS 컴포넌트 |
-| PHP WordPress 커스터마이징 | `functions.php` WebP 필터, CPT, AJAX, JSON-LD 훅 |
-| 반응형 웹 제작 | 모바일~데스크톱 전 구간 Tailwind 반응형 그리드 |
-| 랜딩페이지 제작 | 3종 standalone 랜딩 템플릿 (회생파산 특화 포함) |
-| SEO · AEO 최적화 | JSON-LD 구조화 데이터, FAQPage, 사이트 구조 개선 |
-| JSON-LD / Schema Markup | LegalService · JobPosting · FAQPage 스키마 적용 |
-| Core Web Vitals 개선 | LCP · CLS 최적화, WebP · Lazy Loading 적용 |
-| UI/UX 개선 | 인터랙티브 계산기, FAQ 아코디언, 마이크로 인터랙션 |
-| Python 업무 자동화 | FastAPI 서버 · Google Sheets · Slack 연동 |
-| Git 사용 경험 | 본 저장소 커밋 히스토리 및 브랜치 관리 |
+| **WordPress / PHP** | 커스텀 테마 전체 설계, `functions.php` WebP 필터 · CPT · AJAX · JSON-LD 훅 구현 |
+| **HTML / CSS / JS** | 모든 템플릿 직접 마크업, Tailwind CSS 반응형 그리드, 바닐라 JS 인터랙티브 컴포넌트 |
+| **랜딩페이지 제작** | 3종 Standalone 독립형 랜딩 템플릿 (회생파산 특화 계산기 · 상담 DB 저장 포함) |
+| **SEO / AEO 최적화** | JSON-LD 구조화 데이터 (LegalService · FAQPage · JobPosting), 시맨틱 HTML 구조 개선 |
+| **Core Web Vitals** | LCP · CLS 최적화, WebP 자동 변환, Lazy Loading, 렌더 블로킹 스크립트 최소화 |
+| **UI/UX 설계** | 실시간 채무 진단 계산기, FAQ 아코디언, 마이크로 인터랙션, 모바일 퍼스트 UX |
+| **Python 자동화** | FastAPI 서버, Google Sheets 실시간 동기화, Slack 긴급 알림 연동 |
+| **개발 환경 / VCS** | Docker Compose 멀티 컨테이너 운영, Git 브랜치 전략 및 커밋 히스토리 관리 |
+
+---
 
 자세히 보기 및 라이브 데모 관련 추가 문의는 본 저장소의 Issues 또는 이메일(contact@paradin.com)을 통해 전달해 주시기 바랍니다.
+
