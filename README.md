@@ -16,9 +16,10 @@
 * **WP_Query 동적 파이프라인**: 메인 페이지의 'Insights & News' 영역에서 실제 워드프레스 포스트를 실시간으로 3개 로드합니다.
 * **유연한 예외 처리 (Fallback)**: DB에 저장된 포스트가 없는 경우(초기 설치 단계 등)에도 디자인 레이아웃이 무너지지 않고, 준비된 훌륭한 법률 매거진 예시 카드를 안전하게 보여주는 방어적 분기 코드를 갖추고 있습니다.
 
-### 3. 성능 및 미디어 최적화
+### 3. Core Web Vitals 기반 성능 및 미디어 최적화
 * **서버 수준 WebP 자동 변환 필터**: 대용량 JPG/PNG 이미지를 관리자가 업로드할 시, `functions.php`에서 `wp_handle_upload` 필터를 후킹(Hooking)해 PHP GD 라이브러리를 가동, 화질 저하 없이 용량을 최대 70~80% 압축하는 **자동 WebP 이미지 인코딩 파이프라인**을 제공합니다.
-* **지연 로딩 (Lazy Loading)**: 초기 브라우저의 이미지 로드 부하를 줄여 FCP(First Contentful Paint) 속도를 획기적으로 향상했습니다.
+* **지연 로딩 (Lazy Loading)**: 초기 브라우저의 이미지 로드 부하를 줄여 `LCP(Largest Contentful Paint)` 속도를 획기적으로 향상했습니다.
+* **Core Web Vitals 최적화**: LCP / CLS / FID 세 가지 핵심 지표를 기준으로 이미지 사전 크기 지정(레이아웃 시프트 방지), 폰트 서브셋화, 렌더 블로킹 스크립트 최소화 등을 적용하여 Google PageSpeed Insights 기준 성능을 개선했습니다.
 
 ### 4. 개발 생산성 및 보안 최적화
 * **상대 경로(도메인 독립) 아키텍처**: 워드프레스의 데이터베이스 주소(Site URL) 포트와 로컬 개발 서버 포트가 불일치할 시 로고나 이미지 엑스박스(Broken Link) 현상이 일어나는 문제를 해결하기 위해, 모든 내부 리소스를 도메인 비의존적인 상대 경로(`/wp-content/...`)로 매핑하여 어떠한 환경에서도 완벽히 렌더링됩니다.
@@ -33,15 +34,27 @@
 ### 6. 기술적 SEO & AEO/GEO 최적화 (AI 검색 최적화)
 * **JSON-LD 기반 구조화 데이터 적용**: `LegalService`(로펌 법인 정보) 및 `JobPosting`(웹 프로그래머 채용 정보) 스키마 마크업을 `functions.php`의 `wp_head` 훅을 통해 페이지 조건에 맞춰 동적으로 주입함으로써 구글 및 네이버 검색 리치 스니펫 노출 확률을 높였습니다.
 * **AEO / GEO 최적화 FAQ 컴포넌트**: `FAQPage` 스키마 마크업과 연계하여, 회생파산 랜딩 페이지에 바닐라 JS 및 Tailwind CSS로 설계된 FAQ 아코디언 UI를 이식하여 AI 대답 엔진(Generative Engine Optimization)의 인용 출처 확보에 최적화했습니다.
+* **사이트 구조 개선**: 시맨틱 HTML5 마크업(`<article>`, `<section>`, `<header>` 등)과 올바른 헤딩 계층 구조(`h1`→`h2`→`h3`)를 일관성 있게 적용하여 크롤러 이해도와 접근성을 동시에 향상시켰습니다.
+
+### 7. UI/UX 디자인 구현 및 개선
+* **하이엔드 랜딩 페이지 디자인**: Tailwind CSS 유틸리티 클래스 기반의 디자인 시스템을 활용해 법무법인 브랜드 아이덴티티(프리미엄 네이비 블루, 글래스모피즘 카드 등)에 맞는 고퀄리티 UI를 처음부터 직접 설계·구현했습니다.
+* **마이크로 인터랙션 설계**: 호버 효과(hover), 트랜지션 애니메이션, FAQ 아코디언, 탭 UI 등의 인터랙티브 컴포넌트를 바닐라 JavaScript로 직접 구현하여 사용자 체류 시간과 전환율 향상에 기여했습니다.
+* **실시간 데이터 시각화 UI**: 사용자가 부채액·소득·부양가족 수를 입력하면 즉시 탕감액·변제율을 계산해 보여주는 **인터랙티브 채무 진단 계산기**를 JavaScript만으로 설계, 페이지 이탈 없이 자가 진단이 가능한 UX를 구현했습니다.
+* **모바일 퍼스트 UX 설계**: 모바일 전용 하단 고정 퀵 액션바(전화/진단/신청)를 별도 구현하고, 데스크톱 대비 다른 레이아웃과 폰트 크기를 적용하여 모바일 사용자의 이탈을 최소화했습니다.
 
 ---
 
 ## 🛠️ 기술 스택 (Tech Stack)
 
-* **Backend / CMS**: WordPress Core, PHP
-* **Frontend**: HTML5, Vanilla JavaScript, Tailwind CSS, AOS.js
-* **Environment**: Docker, Docker Compose (Local Dev)
-* **VCS**: Git & GitHub
+| 분류 | 기술 |
+|---|---|
+| **Backend / CMS** | WordPress Core, PHP (커스텀 테마 · 플러그인 개발) |
+| **Frontend** | HTML5, Vanilla JavaScript, Tailwind CSS, AOS.js |
+| **자동화 서버** | Python, FastAPI, Google Sheets API, Slack API |
+| **성능 최적화** | WebP 변환, Lazy Loading, Core Web Vitals |
+| **SEO / 데이터** | JSON-LD, Schema Markup (LegalService, FAQPage, JobPosting) |
+| **개발 환경** | Docker, Docker Compose |
+| **버전 관리** | Git, GitHub |
 
 ---
 
@@ -120,6 +133,21 @@ uvicorn main:app --port 8089 --reload
 ---
 
 ## 👤 개발자 소개 및 포트폴리오 활용 안내
-본 테마는 고해상도 그래픽과 인터랙티브 스크립트를 조화롭게 다루며 백엔드(PHP/WordPress) 데이터의 안전성까지 확보할 수 있는 풀스택 역량을 검증하기 위해 정교하게 작성된 코드베이스입니다. 
+
+본 프로젝트는 **[법무법인 이엘 웹 프로그래머 채용공고]** 의 요구사항을 기준으로, 실무 역량을 직접 코드로 입증하기 위해 제작된 포트폴리오 저장소입니다.
+
+| 채용공고 요구/우대사항 | 본 프로젝트에서의 증명 |
+|---|---|
+| WordPress 구축 및 운영 | 커스텀 테마 전체 설계 및 Docker 기반 운영 |
+| HTML, CSS, JavaScript | 모든 템플릿 직접 마크업 · 바닐라 JS 컴포넌트 |
+| PHP WordPress 커스터마이징 | `functions.php` WebP 필터, CPT, AJAX, JSON-LD 훅 |
+| 반응형 웹 제작 | 모바일~데스크톱 전 구간 Tailwind 반응형 그리드 |
+| 랜딩페이지 제작 | 3종 standalone 랜딩 템플릿 (회생파산 특화 포함) |
+| SEO · AEO 최적화 | JSON-LD 구조화 데이터, FAQPage, 사이트 구조 개선 |
+| JSON-LD / Schema Markup | LegalService · JobPosting · FAQPage 스키마 적용 |
+| Core Web Vitals 개선 | LCP · CLS 최적화, WebP · Lazy Loading 적용 |
+| UI/UX 개선 | 인터랙티브 계산기, FAQ 아코디언, 마이크로 인터랙션 |
+| Python 업무 자동화 | FastAPI 서버 · Google Sheets · Slack 연동 |
+| Git 사용 경험 | 본 저장소 커밋 히스토리 및 브랜치 관리 |
 
 자세히 보기 및 라이브 데모 관련 추가 문의는 본 저장소의 Issues 또는 이메일(contact@paradin.com)을 통해 전달해 주시기 바랍니다.
